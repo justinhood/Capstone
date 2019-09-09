@@ -1,11 +1,11 @@
 \documentclass[letterpaper,10pt]{article}
 \usepackage[top=2cm, bottom=1.5cm, left=1cm, right=1cm]{geometry}
-\usepackage{amsmath, amssymb, amsthm,graphicx}
+\usepackage{amsmath, amssymb, amsthm,graphicx, enumitem}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 
 \lhead{\today}
-\chead{MATH 710 Assignment 3}
+\chead{MSCS 791 Intro Reading \#1}
 \rhead{Justin Hood}
 
 \newcommand{\Z}{\mathbb{Z}}
@@ -15,4 +15,17 @@
 \newtheorem{lem}{Lemma}
 
 \begin{document}
+\begin{itemize}
+\item After an initial skim of the network efficiency paper its purpose appears to be two-fold. The paper primarily focuses on delivering the results of numerical simulation of the effects of perturbing the packaging network from equilibrium, and delivering those results in a non-mathematical context that could be presented to industry clients. The paper also lays a framework for expanding the model they constructed into a general form for more complex systems or networks.
+\item In ``Analyzing Packaging Network Efficiency", the authors were commissioned by the Kimberly-Clark Corporation to model the effects of machine failure on their packaging network, and other networks in general. In particular, the authors were concerned with the packaging network for Huggies\texttrademark .  This network in particular consists of four ``stages",
+\begin{enumerate}
+\item Network Input (Diapers)
+\item Packaging Diapers into Sleeves
+\item Packaging Sleeves into Boxes
+\item Network Output (Boxes of Diapers on Pallets)
+\end{enumerate}
+and between each stage are a number of ``buffers" that transport the diapers between the machines in a given stage. For the Huggies\texttrademark packaging network, the number of machines in a given stage varies depending on the speed of the machines. Given that the packaging network can be drawn in a way that is analogus to current running through an electrical circuit, a parallel of Kirchoff's first law takes shape. That is to say, that the rate of product flowing into a stage of the packaging process is less than or equal to the net processing rate of all machines in the stage. This becomes apparent when considering the network as a whole, as too much product flowing into a given stage would back up the entire process, most likely resulting in scrapped product.\\\\
+The authors began by drawing the entire packaging system as a connected graph, with nodes corresponding to machines in the network, and edges corresponding to buffer connections between the machines of adjacent stages. When connected in this manner, the authors were able to apply their analogue of Kirchoff's law to linearly constrain the system, creating a system of rules to optimize. Using LINDO the authors were able to optimize the values of the network based on the constraints provided by Kimberly-Clark. These optimized rate values form the steady state solution to the network, and as such the authors were then able to implement machine failure into the system to study the effects on network throughput.\\\\
+Once the equilibrium values of the network had been computed, the authors considered machine failure. According two Kimberly-Clark, there are two primary types of machine failure that needed to be considered, short-term and long-term. The authors also note that machines most often fail within 20 seconds of being started, and that approximately 50\% of all machines will fail within two hours of uptime. Using this data, the authors chose to model the probability of machine failure with a log-normal PDF, using the provided parameters from the data. This accounts for the spike in failure probability at the beginning of the process, with a gradual reduction as time goes on for the next two hours of runtime. With this model of failure probability in place, the authors then consider the downtime distribution for machine repair. Given that there are two lengths of common repairs, 30s and 30min, the authors combined two different PDF's into a single 
+\end{itemize}
 \end{document}
