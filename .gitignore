@@ -1,0 +1,4 @@
+## Latex Garbage files
+*.aux
+*.log
+*.sync*
