@@ -3,16 +3,57 @@
 \usepackage{amsmath, amssymb, amsthm,graphicx, enumitem}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
-
 \lhead{\today}
-\chead{MSCS 791 ************************************************}
+\chead{MSCS 791 Intro Reading \# 2}
 \rhead{Justin Hood}
-
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\Q}{\mathbb{Q}}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\C}{\mathbb{C}}
 \newtheorem{lem}{Lemma}
-
 \begin{document}
+\begin{itemize}
+\item After an initial skim, it appears that the goal of this paper is to explain a new method for processing heart rate tracker from a wearable device on the wrist into usable data. The authors note that the gait of a person effects the data from a wrist mounted monitor, and they sought to remove that noise for precise measurements of heart rate.
+\item Based on reading the article itself, as well as noting its original source, I would say that the audience is other industry oriented mathematicians. Given the content of SVD and signal processing, I would guess that the audience would also need at least an undergraduate degree, if not some graduate studies as well. 
+\item In ``Detecting heart rate while jogging: blind source separation of gait and heartbeat", the authors were tasked to construct a method of isolating heart rate data from potentially noisy data from a wrist mounted photo-diode. The authors were told that in prototypes of a new wrist mounted fitness tracker, the users gait was obfuscating the pulse data, and as such, the tracker was computing gait as opposed to pulse from the user.\\\\
+To begin, the authors considered a number of existing modeling strategies and related problems, such as isolating fetal and maternal heartbeats from each other, among others. Most of the existing research was able to make use of a known frequency or temporal fact to isolate the signals, e.g. fetal heartbeats are much faster than the mothers. Because a users pulse and gait are often quite similar, such implicit facts about the system cannot be used in this instance. Moving forward, the authors settle on a modified SVD approach to some ``ersatz data" because none was given to them to analyze.\\\\
+The authors obtained arterial blood pressure data as a starting point, and then applied the Beer-Lambert law to transform it from pressure to light intensity data using the map,
+\[I(t)=[1+0.05\sin(7t)]e^{\frac{-0.05P(t)}{\max(P(t))}}\]
+Here, the $0.05$ value corresponds to the noise ratio of the data, the coefficient inside of the sine function is computed from the frequency of the original data, and $P(t)$ is the original pressure data.\\\\
+From this pressure and resultant intensity data, the authors constructed spectrograms in an effort to see if there were any visually distinct characteristics that would assist in the analysis. Because the frequencies of pulse and gait are not necessarily distinguishable, the authors note no real discernible value. As such, they chose to analyze the phase space using the time series data. By plotting the resultant trajectories of the intensity data against itself in a phase plane, the authors were able to isolate two distinct movement types. One, the larger and more noticeable were the ``D" shaped paths that correspond to the gait; and two, smaller loops that correspond to heartbeats.\\\\
+Because the authors found a distinction in the behavior of gait and heart beats in the phase space representation, they begin a SVD analysis of the intensity data. First, they arranged the data in an $m\times n$ matrix of the following form,
+\[M=\begin{bmatrix}
+I_1 & I_{2} & \ldots & I_{n}\\
+I_{n+1} & \ddots & \ldots & \vdots
+\end{bmatrix}\]
+and then computed the SVD decomposition,
+\[M_{m\times n}=U_{m\times m}S_{m\times n}V^T_{n\times n}\]
+By construction, the $S$ matrix contains the singular values sorted by magnitude. Because the ``D" shape occurred in two dimensions, the authors created a new matrix by setting the two largest singular values to zero and recomputing the $M$ matrix. This new matrix contains the heartbeat pulse data, without the gait interference in the same form as the original $M$ matrix, and as such, the time series can be extracted and plotted.\\\\
+The authors discovered that the resultant data from the modified SVD matrix exactly matched the original pressure data that they began with, with no interference from the gait function. In addition, by rectifying and smoothing the signal, a plot that is almost identical to the original pressure data can be obtained. As such, they have found a means of isolating the original heartbeat signal from noisy data that they note is not sensitive to the amount of input data given, which is crucial for a wearable application.
+\item Figure Analysis:
+\begin{enumerate}
+\item This figure was helpful to understand the product that was generating the noisy data.
+\item I found this figure to be helpful for seeing both what the ``ersatz pulse" looked like and what the resultant measurement the monitor would be making.
+\item I felt that this figure was not necessary to include, especially because the authors note that nothing can be concluded from the plots.
+\item This figure was very helpful in understanding what their phase reconstruction resulted in, and was helpful to show the difference in gait and pulse in the data.
+\item I found this figure helpful in seeing each step of the analysis process in order.
+\item I found this figure helpful in seeing each step of the analysis process in order, especially since this model shows that the analysis is robust to different gait inputs.
+\item This figure is a powerful statement of how accurate their analysis was. To see the original pulses lined up with the output reaffirmed the accuracy of the analysis.
+\item I did not find this figure to be particularly helpful. A combination of Figure 7 and Figure 5 is much easier to understand than an overlay in this manner, at least to me.
+\item This figure was helpful to understand the reconstruction and smoothing of the result signal vs the original pulse data in another form.
+\end{enumerate}
+\item While reading this paper, I enjoyed the level of detail that was put into each step of the analysis. I never felt like the authors were leaving too many details out, or making jumps that I could not easily follow.
+\item If I was to change anything about this paper, I would have added a little more detail into the phase space reconstruction portion, specifically in the area where they note the ``D" loops, and what they mean.
+\item Questions:
+\begin{enumerate}
+\item Given their statement about the lack of sensitivity to the length of the input time series, what would their ideal length be?
+\begin{enumerate}
+\item I ask this because they never address the changing in pace of an athlete. The tracker will have to be able to account for the gradual increases and decreases in speed and heart rate from the users. A runner that starts a warm-up by walking and gradually increases to a full sprint will see their gait change much more quickly than their pulse, especially at a professional level. As such, the amount of data being actively filtered would need to account for that.
+\end{enumerate}
+\item As someone who has never worked with the Beer-Lambert law, how was this model function derived?
+\end{enumerate}
+\item Upon reading this paper, I feel fairly comfortable with the mechanics of the process. I am fairly familiar with the SVD application portion, so that made sense to me. The only part that confused me at first was the phase space reconstruction, but upon some reflection, I was able to make the connection to Lorenz attractors, and I remembered from my undergraduate doing phase plane analysis and bifurcation analysis.
+\item While reading this paper, I needed to remind myself of the phase plane construction, and after some brief research, I was able to find the following article online, which helped me recall some hazy details.\\
+$http://www.scholarpedia.org/article/Attractor\_reconstruction$
+\end{itemize}
 \end{document}
