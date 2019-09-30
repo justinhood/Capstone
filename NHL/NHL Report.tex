@@ -1,0 +1,184 @@
+\documentclass[11pt]{report}            % Report class in 11 points
+\parindent0pt  \parskip10pt             % make block paragraphs
+\raggedright                            % do not right-justify
+\usepackage{amsmath, amssymb, amsthm,graphicx, enumitem, threeparttable, hyperref,gensymb}
+\newcommand{\ro}{\mathcal{R}_0}
+\makeatletter
+\newcommand*{\centerfloat}{%
+  \parindent \z@
+  \leftskip \z@ \@plus 1fil \@minus \textwidth
+  \rightskip\leftskip
+  \parfillskip \z@skip}
+\makeatother
+
+
+
+\title{\bf Hockey Hockey Hockey\\
+\large and more Hockey}  % Supply information
+\author{Justin Hood\\
+MSCS 791}              %   for the title page.
+\date{\today}                           %   Use current date.
+
+\begin{document}                        % End of preamble, start of text.
+\maketitle                              % Print title page.
+\pagenumbering{roman}                   % roman page number for toc
+\setcounter{page}{2}                    % make it start with "ii"
+\tableofcontents                        % Print table of contents
+\newpage
+%\setcounter{section}{1}
+\section*{Introduction}                % Print a "chapter" heading\
+\addcontentsline{toc}{section}{Introduction}
+\pagenumbering{arabic}                  % Start text with arabic 1
+As with any professional sporting league, the number of teams and their spatial distribution relative to one another is very important, and for the National Hockey League (NHL), this is no exception. \textit{In fact, it is possibly even more important given the seasonal and temperature dependent nature of the game itself.} When new teams are added to the league, they may have negative impacts on nearby teams, as well as struggle to be profitable if placed in an unfitting locale. Of all leagues, it seems that the NHL feels these impacts the most, as hockey requires just as much specialized equipment, if not more than other sports, but the NHL also lacks many of the national TV contracts that other professional sports use as a source of revenue\cite{light}. As such, expansion of the NHL is a complex problem that encompasses a large number of varibles. 
+************* MIL vs ORD/MIL *******************************************
+\section*{Methods}
+\addcontentsline{toc}{section}{Methods}
+\subsection*{SIR Model}
+\addcontentsline{toc}{subsection}{SIR Model}
+Given that the sucess of a team in the NHL is mostly dependent on fan base size and growth, we consider fan loyalty to spread as in a traditional SIR disease model as in Light \textit{et al}.\cite{light} The model for two geographically close teams follows, the isolated geographic case follows quite easily.
+\begin{equation} \label{SIRMODEL}
+\begin{split}
+\dot{S} &= -S[\beta_1(I_1+C_1)+\beta_2(I_2+C_2)]\\
+\dot{I}_1 &= \beta_1S(I_1+C_1)-\gamma I_1-\alpha_1I_1+\delta_{21}[(I_1+C_1)I_2]-\delta_{12}[I_1(I_2+C_2)]\\
+\dot{I}_2 &= \beta_2S(I_2+C_2)-\gamma I_2-\alpha_2I_2+\delta_{12}[(I_2+C_2)I_1]-\delta_{21}[I_2(I_1+C_1)]\\
+\dot{C}_1 &= \alpha_1I_1\\
+\dot{C}_2 &= \alpha_2I_2\\
+\dot{R} &= \gamma (I_1+I_2)\\
+N &= S+I_1+I_2+C_1+C_2+R
+\end{split}
+\end{equation}
+As in \cite{light}, we consider a model of disease spread that includes a ``Chronically infected" fan category. As the SIR model is well studied, we know that we may compute the basic reprodictive ratio $\ro$ as,
+\[\ro =\frac{\beta N}{\gamma}\]
+with $\beta$ the mean rate of transmission of fan allegiance for a given team, $N$ is the population drawn from, and $1/\gamma$ is the mean transmission period, or ~9 months (1 Season). Knowing that $\ro>1$ means that the infected population is growing, and that $\ro<1$ is a dying infected population, we consider our computation of $\beta$ subject to this constraint.
+\subsection*{Beta}
+\addcontentsline{toc}{subsection}{Beta}
+$\beta$ is a product of many factors, the main being team success, physical locale (weather, population, income), and the social environment\cite{light}.
+\subsubsection*{Team Success}
+\addcontentsline{toc}{subsection}{Team Success}
+The success of a team can be quantified as a function of its successes in previous post seasons following the following equation,
+\begin{equation}\label{Success}
+S_t = \frac{1.875PSA+3.75PSW+30SC}{N}
+\end{equation}
+Where, $PSA$ is the number of series appearances by a team, $PSW$ is the number of wins, and $SC$ is the number of stanley cups won over $N$ seasons. Taking the analysis of 2001-2015 from Light \textit{et al.}\cite{light}, and extending it to include the seasons that have passed in the interim, we arrive at the updated Tables \ref{table:Revenue}, \ref{table:St} below.
+
+
+\begin{table}[ht]
+\centerfloat
+\begin{tabular}{lrrrr}
+\hline
+\multicolumn{5}{c}{Revenue and Success Rates of NHL Teams 2001-2019} \\
+Team & Revenue$^a$ & Playoff Appearances$^b$ & Playoff Wins$^c$ & Stanley Cup Wins$^d$ \\ 
+\hline
+Anaheim Ducks & 134 &  26 &  15 &   1 \\ 
+Arizona Coyotes &  96 &   6 &   2 &   0 \\ 
+Boston Bruins & 191 &  26 &  14 &   1 \\ 
+Buffalo Sabres & 128 &  10 &   5 &   0 \\ 
+Calgary Flames & 132 &  12 &   4 &   0 \\ 
+Carolina Hurricanes & 109 &  15 &  11 &   1 \\ 
+Chicago Blackhawks & 201 &  24 &  16 &   3 \\ 
+Colorado Avalanche & 119 &  19 &  10 &   1 \\ 
+Columbus Blue Jackets & 111 &   6 &   1 &   0 \\ 
+Dallas Stars & 144 &  15 &   6 &   0 \\ 
+Detroit Red Wings & 171 &  30 &  17 &   2 \\ 
+Edmonton Oilers & 145 &   8 &   4 &   0 \\ 
+Florida Panthers &  99 &   3 &   0 &   0 \\ 
+L.A. Kings & 193 &  18 &  11 &   2 \\ 
+Minnesota Wild & 142 &  13 &   4 &   0 \\ 
+Montreal Canadians & 239 &  19 &   8 &   0 \\ 
+Nashville Predators & 132 &  19 &   7 &   0 \\ 
+New Jersey Devils & 166 &  22 &  12 &   1 \\ 
+New York Islanders & 107 &  10 &   2 &   0 \\ 
+New York Rangers & 253 &  22 &  11 &   0 \\ 
+Ottawa Senators & 124 &  21 &  10 &   0 \\ 
+Philadelphia Flyers & 186 &  23 &  10 &   0 \\ 
+Pittsburgh Penguins & 185 &  33 &  22 &   3 \\ 
+San Jose Sharks & 148 &  23 &  10 &   0 \\ 
+St. Louis Blues & 148 &  32 &  18 &   1 \\ 
+Tampa Bay Lightning & 146 &  23 &  14 &   1 \\ 
+Toronto Maple Leafs & 232 &  12 &   4 &   0 \\ 
+Vancouver Canucks & 168 &  18 &   7 &   0 \\ 
+Washington Capitals & 194 &  22 &  10 &   1 \\ 
+Winnipeg Jets & 135 &   5 &   2 &   0 \\ 
+Las Vegas Knights & 180 &   5 &   3 &   0 \\ 
+\hline
+\end{tabular}
+\caption{$^a$in Millions of USD as of 2018 \cite{money}; $^b$Playoff series appearances 2001-2019 \cite{stats}; $^c$Playoff series wins 2001-2019 \cite{stats}; $^d$Stanley Cup wins 2001-2019 \cite{stats}}
+\label{table:Revenue}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{lrr}
+\hline
+\multicolumn{3}{c}{Computed and Normalized Success Scores by Team} \\
+Team & $S_t^a$ & $s_t^b$ \\ 
+\hline
+Anaheim Ducks & 7.50 & 1.63 \\ 
+Arizona Coyotes & 1.04 & 0.23 \\ 
+Boston Bruins & 7.29 & 1.59 \\ 
+Buffalo Sabres & 2.08 & 0.45 \\ 
+Calgary Flames & 2.08 & 0.45 \\ 
+Carolina Hurricanes & 5.52 & 1.20 \\ 
+Chicago Blackhawks & 10.83 & 2.36 \\ 
+Colorado Avalanche & 5.73 & 1.25 \\ 
+Columbus Blue Jackets & 0.83 & 0.18 \\ 
+Dallas Stars & 2.81 & 0.61 \\ 
+Detroit Red Wings & 10.00 & 2.18 \\ 
+Edmonton Oilers & 1.67 & 0.36 \\ 
+Florida Panthers & 0.31 & 0.07 \\ 
+L.A. Kings & 7.50 & 1.63 \\ 
+Minnesota Wild & 2.19 & 0.48 \\ 
+Nashville Predators & 3.44 & 0.75 \\ 
+New Jersey Devils & 6.46 & 1.40 \\ 
+New York Islanders & 1.46 & 0.32 \\ 
+New York Rangers & 4.58 & 1.00 \\ 
+Ottawa Senators & 4.27 & 0.93 \\ 
+Philadelphia Flyers & 4.48 & 0.97 \\ 
+Pittsburgh Penguins & 13.02 & 2.83 \\ 
+San Jose Sharks & 4.48 & 0.97 \\ 
+St. Louis Blues & 8.75 & 1.90 \\ 
+Tampa Bay Lightning & 6.98 & 1.52 \\ 
+Toronto Maple Leafs & 2.08 & 0.45 \\ 
+Vancouver Canucks & 3.33 & 0.73 \\ 
+Washington Capitals & 6.04 & 1.31 \\ 
+Winnipeg Jets & 0.94 & 0.20 \\ 
+Las Vegas Knights & 1.15 & 0.25 \\ 
+\hline
+\end{tabular}
+\caption{$^a$Table \ref{table:Revenue} and Eq. \ref{Success}; $^b$Normalized by mean of $S_t$}
+\label{table:St}
+\end{table}
+\subsubsection*{Locale}
+\addcontentsline{toc}{subsection}{Locale}
+The location of a team is very important for hockey. A number of teams in the NHL consistently struggle in terms of revenue, seemingly due to what Light \textit{et al.} and Jones call low locational quality\cite{light}\cite{jones}. In Jones and Ferguson \cite{jones}, the variable,
+\begin{equation}\label{ht}
+H_t=\frac{1}{4}\frac{a_t^2}{b_t^2}
+\end{equation}
+is defined to be the locational quality, dependent on the equations,
+\begin{equation}\label{a}
+\log(a_t) = \alpha_0+\alpha_1(CAN)+\alpha_2\log(POP)+\alpha_3\log(INC)
+\end{equation}
+\begin{equation}\label{b}
+\log(b_t) = \beta_0+\beta_1(CAN)+\beta_2\log(POP)+\beta_3\log(INC)
+\end{equation}
+Where $CAN$ is a binary variable, $POP$ is the population of the metro area in millions, and $INC$ is GDP per capita of the area. For our analysis, we shall take the convention of Light \textit{et al.}, and replace the $CAN$ variable with a variable called $WINT$, which will be a binary value describing if a location has a colder mean monthly temperature than 6 \degree C. Using the data from Table 3 of \cite{light}, we perform a least squares regression on the locational data in an attempt to compute the coefficents $\alpha_i,\ \beta_i$ from \ref{a} and \ref{b}. The coefficients we obtain are,
+\begin{equation}\label{acoeff}
+\log(a_t) = 14.1 + 0.2205(WINT)+.091\log(POP)-0.3766\log(INC)
+\end{equation}
+\begin{equation}\label{bcoeff}
+\log(b_t) = 9.171 + .03(WINT)+.028\log(POP)-.1879\log(INC)
+\end{equation}
+Each of the coefficents of these regressions are significant at the $\alpha=10^{-6}$ level, so we know to keep them for our analysis.
+
+\subsubsection*{Social Environment}
+\addcontentsline{toc}{subsection}{Social Environment}
+
+
+
+\begin{thebibliography}{9}
+\bibitem{light} J. Light, A. Chernin, and J. M. Heffernan, ``NHL expansion and fan allegiance: a mathematical modelling study,” \textit{Mathematics-in-Industry Case Studies}, vol. 7, no. 1, Apr. 2016.
+\bibitem{money} M. Ozanian and K. Badenhausen, ``The NHLs Most Valuable Teams” \textit{Forbes}, 21-Feb-2019. [Online]. Available: \url{https://www.forbes.com/sites/mikeozanian/2018/12/05/the-nhls-most-valuable-teams/}. [Accessed: 25-Sep-2019].
+\bibitem{stats}  HockeyDB.com (2019) National Hockey League history and statistics. \url{http://www.hockeydb.com/ihdb/stats/leagues/141.html}. Web
+\bibitem{jones}J. C. H. Jones and D. G. Ferguson, ``Location and Survival in the National Hockey League,” \textit{The Journal of Industrial Economics}, vol. 36, no. 4, p. 443, Jun. 1988.
+\end{thebibliography}
+\end{document}                          % The required last line

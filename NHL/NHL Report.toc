@@ -1,0 +1,7 @@
+\contentsline {section}{Introduction}{1}{section*.2}
+\contentsline {section}{Methods}{1}{section*.3}
+\contentsline {subsection}{SIR Model}{1}{section*.4}
+\contentsline {subsection}{Beta}{2}{section*.5}
+\contentsline {subsection}{Team Success}{2}{section*.6}
+\contentsline {subsection}{Locale}{2}{section*.7}
+\contentsline {subsection}{Social Environment}{3}{section*.8}
