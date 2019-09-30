@@ -20,7 +20,7 @@ summary(bmod)
 # summary(bmodWINT)
 
 #Milwaukee Data
-MIL=data.frame("POP"=1.572245,"INC"=73805,"WINT"=1)
+MIL=data.frame("POP"=1.572245,"INC"=58680,"WINT"=1)
 (a_MIL=exp(predict(amod,MIL)))
 (b_MIL=exp(predict(bmod,MIL)))
 (H_MIL=(1/4)*(a_MIL^2)/(b_MIL^2))
