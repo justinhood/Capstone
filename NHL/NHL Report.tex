@@ -1,7 +1,7 @@
 \documentclass[11pt]{report}            % Report class in 11 points
 \parindent0pt  \parskip10pt             % make block paragraphs
 \raggedright                            % do not right-justify
-\usepackage{amsmath, amssymb, amsthm,graphicx, enumitem, threeparttable, hyperref,gensymb}
+\usepackage{amsmath, amssymb, amsthm,graphicx, enumitem, hyperref,gensymb, float} %, threeparttable}
 \newcommand{\ro}{\mathcal{R}_0}
 \makeatletter
 \newcommand*{\centerfloat}{%
@@ -12,7 +12,7 @@
 \makeatother
 
 
-
+%*******************************************************************%
 \title{\bf Hockey Hockey Hockey\\
 \large and more Hockey}  % Supply information
 \author{Justin Hood\\
@@ -29,13 +29,13 @@ MSCS 791}              %   for the title page.
 \section*{Introduction}                % Print a "chapter" heading\
 \addcontentsline{toc}{section}{Introduction}
 \pagenumbering{arabic}                  % Start text with arabic 1
-As with any professional sporting league, the number of teams and their spatial distribution relative to one another is very important, and for the National Hockey League (NHL), this is no exception. \textit{In fact, it is possibly even more important given the seasonal and temperature dependent nature of the game itself.} When new teams are added to the league, they may have negative impacts on nearby teams, as well as struggle to be profitable if placed in an unfitting locale. Of all leagues, it seems that the NHL feels these impacts the most, as hockey requires just as much specialized equipment, if not more than other sports, but the NHL also lacks many of the national TV contracts that other professional sports use as a source of revenue\cite{light}. As such, expansion of the NHL is a complex problem that encompasses a large number of varibles. 
+As with any professional sporting league, the number of teams and their spatial distribution relative to one another is very important, and for the National Hockey League (NHL), this is no exception. \textit{In fact, it is possibly even more important given the seasonal and temperature dependent nature of the game itself.} When new teams are added to the league, they may have negative impacts on nearby teams, as well as struggle to be profitable if placed in an unfitting locale. Of all leagues, it seems that the NHL feels these impacts the most, as hockey requires just as much specialized equipment, if not more than other sports, but the NHL also lacks many of the national TV contracts that other professional sports use as a source of revenue\cite{light}. As such, expansion of the NHL is a complex problem that encompasses a large number of variables. In this case study, we will assess the viability of Milwaukee as a potential expansion location, and the possible effects of Chicago's proximity.
 ************* MIL vs ORD/MIL *******************************************
 \section*{Methods}
 \addcontentsline{toc}{section}{Methods}
 \subsection*{SIR Model}
 \addcontentsline{toc}{subsection}{SIR Model}
-Given that the sucess of a team in the NHL is mostly dependent on fan base size and growth, we consider fan loyalty to spread as in a traditional SIR disease model as in Light \textit{et al}.\cite{light} The model for two geographically close teams follows, the isolated geographic case follows quite easily.
+Given that the success of a team in the NHL is largely dependent on fan base size and growth, we may effectively model a teams success by modeling the fan base size. We consider fan loyalty to spread as in a traditional SIR disease model as in Light \textit{et al}\cite{light}, as people are more likely to become fans when exposed to fans. The model for two geographically close teams follows, the isolated geographic case follows quite easily.
 \begin{equation} \label{SIRMODEL}
 \begin{split}
 \dot{S} &= -S[\beta_1(I_1+C_1)+\beta_2(I_2+C_2)]\\
@@ -47,22 +47,22 @@ Given that the sucess of a team in the NHL is mostly dependent on fan base size 
 N &= S+I_1+I_2+C_1+C_2+R
 \end{split}
 \end{equation}
-As in \cite{light}, we consider a model of disease spread that includes a ``Chronically infected" fan category. As the SIR model is well studied, we know that we may compute the basic reprodictive ratio $\ro$ as,
+Here, $S$ corresponds to the susceptible population, people without a team loyalty. $I_i$ corresponds to the normal fans of team $i$ and $C_i$ corresponds to avid fans, and $R$ represents people who were fans of a team, but have lost their loyalty. These fans are often not willing to choose an allegiance to a new team immediately, and as such, they remain a separate population in our model. As in \cite{light}, we consider a model of disease spread that includes a ``Chronically infected" fan category. These ``chronically infected" fans are those who are very loyal to their team, and will likely remain ``infected" regardless of how many seasons are considered. Accordingly, these categories in (\ref{SIRMODEL}), $C_1,C_2$ have no loss of population, and can only increase in size. \\
+Because the standard SIR model is well studied, we know that we may compute the basic reproductive ratio $\ro$ of the ``disease" as,
 \[\ro =\frac{\beta N}{\gamma}\]
-with $\beta$ the mean rate of transmission of fan allegiance for a given team, $N$ is the population drawn from, and $1/\gamma$ is the mean transmission period, or ~9 months (1 Season). Knowing that $\ro>1$ means that the infected population is growing, and that $\ro<1$ is a dying infected population, we consider our computation of $\beta$ subject to this constraint.
+with $\beta$ equal to the mean rate of transmission of fan allegiance for a given team, $N$ is the population drawn from, and $1/\gamma$ is the mean transmission period, or $\sim 9$ months (1 Season). Knowing that $\ro>1$ means that the fan base is growing, and that $\ro<1$ is a dying fan base, we consider our computation of $\beta$ subject to this constraint.
 \subsection*{Beta}
 \addcontentsline{toc}{subsection}{Beta}
-$\beta$ is a product of many factors, the main being team success, physical locale (weather, population, income), and the social environment\cite{light}.
+$\beta$ is a product of many factors, the main being team success, physical locale (weather, population, income), and the social environment of the city\cite{light}. The quantification of these factors is the bulk? of our analysis.
 \subsubsection*{Team Success}
 \addcontentsline{toc}{subsection}{Team Success}
-The success of a team can be quantified as a function of its successes in previous post seasons following the following equation,
+The success of a team can be quantified as a function of its successes in past post seasons following the following equation,
 \begin{equation}\label{Success}
 S_t = \frac{1.875PSA+3.75PSW+30SC}{N}
 \end{equation}
-Where, $PSA$ is the number of series appearances by a team, $PSW$ is the number of wins, and $SC$ is the number of stanley cups won over $N$ seasons. Taking the analysis of 2001-2015 from Light \textit{et al.}\cite{light}, and extending it to include the seasons that have passed in the interim, we arrive at the updated Tables \ref{table:Revenue}, \ref{table:St} below.
+Where, $PSA$ is the number of playoff series appearances by a team, $PSW$ is the number of playoff series wins, and $SC$ is the number of stanley cups won over $N$ seasons. Taking the analysis of 2001-2015 from Light \textit{et al.}\cite{light}, and extending it to include the seasons that have passed in the interim, we arrive at the updated Tables \ref{table:Revenue}, \ref{table:St} below. Table \ref{table:Revenue} contains the data related to existing team revenue and the variables in (\ref{Success}). Table \ref{table:St} contains the computations of $S_t$ and its normalized counterpart $s_t$. From these tables, we begin to obtain a sense of how the success of teams such as the Blackhawks and Red Wings generates high normalized success scores, while teams such as the Coyotes who's success is low in post season play have lower normalized scores. This aligns with our assumption that team success will be an important factor in computing $\beta$ for a given team.
 
-
-\begin{table}[ht]
+\begin{table}[htp]
 \centerfloat
 \begin{tabular}{lrrrr}
 \hline
@@ -106,7 +106,7 @@ Las Vegas Knights & 180 &   5 &   3 &   0 \\
 \label{table:Revenue}
 \end{table}
 
-\begin{table}[ht]
+\begin{table}[htp]
 \centering
 \begin{tabular}{lrr}
 \hline
@@ -154,25 +154,43 @@ The location of a team is very important for hockey. A number of teams in the NH
 \begin{equation}\label{ht}
 H_t=\frac{1}{4}\frac{a_t^2}{b_t^2}
 \end{equation}
-is defined to be the locational quality, dependent on the equations,
+is defined to be the location quality, dependent on the equations,
 \begin{equation}\label{a}
 \log(a_t) = \alpha_0+\alpha_1(CAN)+\alpha_2\log(POP)+\alpha_3\log(INC)
 \end{equation}
 \begin{equation}\label{b}
 \log(b_t) = \beta_0+\beta_1(CAN)+\beta_2\log(POP)+\beta_3\log(INC)
 \end{equation}
-Where $CAN$ is a binary variable, $POP$ is the population of the metro area in millions, and $INC$ is GDP per capita of the area. For our analysis, we shall take the convention of Light \textit{et al.}, and replace the $CAN$ variable with a variable called $WINT$, which will be a binary value describing if a location has a colder mean monthly temperature than 6 \degree C. Using the data from Table 3 of \cite{light}, we perform a least squares regression on the locational data in an attempt to compute the coefficents $\alpha_i,\ \beta_i$ from \ref{a} and \ref{b}. The coefficients we obtain are,
+Where $CAN$ is a binary variable describing if a team is located in Canada, $POP$ is the population of the metro area in millions, and $INC$ is GDP per capita of the area. For our analysis, we shall take the convention of Light \textit{et al.}, and replace the $CAN$ variable with a variable called $WINT$, which will be a binary value describing if a location has a colder mean monthly temperature than 6 \degree C. Using the data from Table 3 of \cite{light}, we perform a least squares regression on the location data in an attempt to compute the coefficients $\alpha_i,\ \beta_i$ from \ref{a} and \ref{b}. The coefficients we obtain are,
 \begin{equation}\label{acoeff}
 \log(a_t) = 14.1 + 0.2205(WINT)+.091\log(POP)-0.3766\log(INC)
 \end{equation}
 \begin{equation}\label{bcoeff}
 \log(b_t) = 9.171 + .03(WINT)+.028\log(POP)-.1879\log(INC)
 \end{equation}
-Each of the coefficents of these regressions are significant at the $\alpha=10^{-6}$ level, so we know to keep them for our analysis.
+Each of the coefficients we compute have incredibly large T-scores, which aligns with the linear nature of (\ref{a}) and (\ref{b}). As such, we are confident that these coefficients are correct for the purposes of our analysis. With these coefficients computed, we can compute the following location score for our potential Milwaukee team,
+\begin{table}[H]
+\centerfloat
+\begin{tabular}{lrrrrrrrr}
+\hline
+\multicolumn{9}{c}{Location Score for Milwaukee} \\
+Team & Population$^a$ & GDP per capita$^b$ & Temperature$^c$ & WINT & $a_t$ & $b_t$ & $H_t$ & $h_t$\\
+\hline
+Milwaukee & 1.572245 & \$58,680.00 & -2 & 1 & 27583.4 & 1274.342 & 117.1288 & 0.9990123
+\end{tabular}
+\caption{$^a$in Millions *CITE*; $^b$USD *CITE*; $^c$ \degree C *CITE*}
+\label{table:Milwaukee_H}
+\end{table}
+So, we see that Milwaukee has a location score that is approximately equal to the mean score for all existing teams. Based on the analysis in \cite{light}, we see that this score is similar to, Boston (121.91), Edmonton (111.6611), and Winnipeg (121.93). So, when considering the necessary team success score for Milwaukee, we will compare with these teams.
 
 \subsubsection*{Social Environment}
 \addcontentsline{toc}{subsection}{Social Environment}
-
+Finally, we consider how the social environment of a susceptible person could influence the rate at which allegiance can spread. As with \cite{light}, we consider three cases,
+\begin{enumerate}
+\item $p=0.05$: no regular contact with any existing fans\\
+\item $p=0.25$: some friends or family in $I_t$\\
+\item $p=0.75$: friends or family in $C_t$
+\end{enumerate}
 
 
 \begin{thebibliography}{9}
