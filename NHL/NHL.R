@@ -54,3 +54,7 @@ R_075 = Beta_75*9
 
 
 Reprod = data.frame("Team"=X$Team, "R_0 0.05"=R_005, "R_0 0.25"=R_025, "R_0 0.75"=R_075)
+
+##########Minscores #################################
+Mins_t <- data.frame("Team"="Milwaukee", "p=0.05"=1/(9*.05*h_mil), "p=0.25"=1/(9*.25*h_mil), "p=0.75"=1/(9*.75*h_mil))
+print(xtable(Mins_t, type="latex"), file="min.tex")

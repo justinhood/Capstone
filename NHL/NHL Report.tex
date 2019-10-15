@@ -10,32 +10,30 @@
   \rightskip\leftskip
   \parfillskip \z@skip}
 \makeatother
-
-
 %*******************************************************************%
-\title{\bf Hockey Hockey Hockey\\
-\large and more Hockey}  % Supply information
+\title{\bf An Evaluation of Milwaukee as a Candidate for NHL Expansion\\
+\large Using an SIR Model Approach}  % Supply information
 \author{Justin Hood\\
 MSCS 791}              %   for the title page.
 \date{\today}                           %   Use current date.
-
 \begin{document}                        % End of preamble, start of text.
 \maketitle                              % Print title page.
 \pagenumbering{roman}                   % roman page number for toc
 \setcounter{page}{2}                    % make it start with "ii"
 \tableofcontents                        % Print table of contents
 \newpage
-%\setcounter{section}{1}
+\section*{Abstract}
+\addcontentsline{toc}{section}{Abstract}
+As the National Hockey League continues to grow, the assessment of viable expansion location becomes increasingly more important. Using a model of fan allegiance represented as an infectious disease, we will test whether the city of Milwaukee is a viable candidate for a new NHL team. For this analysis we will consider Milwaukee as an isolated city, as well as the geographic impact of having the Chicago Blackhawks within 100 miles. Upon analyzing the requisite team success rate for a team in Milwaukee, we find that it is a viable candidate when Chicago is ignored; but the presence of a successful rival team could prove to be sub optimal in the long term.
 \section*{Introduction}                % Print a "chapter" heading\
 \addcontentsline{toc}{section}{Introduction}
 \pagenumbering{arabic}                  % Start text with arabic 1
-As with any professional sporting league, the number of teams and their spatial distribution relative to one another is very important, and for the National Hockey League (NHL), this is no exception. \textit{In fact, it is possibly even more important given the seasonal and temperature dependent nature of the game itself.} When new teams are added to the league, they may have negative impacts on nearby teams, as well as struggle to be profitable if placed in an unfitting locale. Of all leagues, it seems that the NHL feels these impacts the most, as hockey requires just as much specialized equipment, if not more than other sports, but the NHL also lacks many of the national TV contracts that other professional sports use as a source of revenue\cite{light}. As such, expansion of the NHL is a complex problem that encompasses a large number of variables. In this case study, we will assess the viability of Milwaukee as a potential expansion location, and the possible effects of Chicago's proximity.
-************* MIL vs ORD/MIL *******************************************
+As with any professional sporting league, the number of teams and their spatial distribution relative to one another is very important, and for the National Hockey League (NHL), this is no exception. In fact, it is possibly even more important given the seasonal and temperature dependent nature of the game itself. When new teams are added to the league, they may have negative impacts on the revenue and stability of nearby teams, as well as struggle to be profitable if placed in an unfitting locale. Of all leagues, it seems that the NHL feels these impacts the most, as hockey requires just as much specialized equipment, if not more than other sports, but the NHL also lacks many of the national TV contracts that other professional sports use as a major source of revenue\cite{light}. As such, expansion of the NHL is a complex problem that encompasses a large number of variables. In this case study, we will assess the viability of Milwaukee as a potential expansion location, and the possible effects of Chicago's proximity. By considering fan allegiance to a team as a spreadable ``disease", we shall implement an SIR model and analyze the $\ro$ value to determine Milwaukees potential viability as a location for the next new NHL team.
 \section*{Methods}
 \addcontentsline{toc}{section}{Methods}
 \subsection*{SIR Model}
 \addcontentsline{toc}{subsection}{SIR Model}
-Given that the success of a team in the NHL is largely dependent on fan base size and growth, we may effectively model a teams success by modeling the fan base size. We consider fan loyalty to spread as in a traditional SIR disease model as in Light \textit{et al}\cite{light}, as people are more likely to become fans when exposed to fans. The model for two geographically close teams follows, the isolated geographic case follows quite easily.
+Given that the success of a team in the NHL is largely dependent on fan base size and growth, we may effectively model a teams success by modeling the fan base size. We consider fan loyalty to spread like a disease would under a traditional SIR disease model.\cite{light}, as people are more likely to become fans when exposed to fans. The model for two geographically close teams follows, the isolated geographic case follows quite easily by removing the second categories for each population, as well as the cross terms.
 \begin{equation} \label{SIRMODEL}
 \begin{split}
 \dot{S} &= -S[\beta_1(I_1+C_1)+\beta_2(I_2+C_2)]\\
@@ -53,15 +51,14 @@ Because the standard SIR model is well studied, we know that we may compute the 
 with $\beta$ equal to the mean rate of transmission of fan allegiance for a given team, $N$ is the population drawn from, and $1/\gamma$ is the mean transmission period, or $\sim 9$ months (1 Season). Knowing that $\ro>1$ means that the fan base is growing, and that $\ro<1$ is a dying fan base, we consider our computation of $\beta$ subject to this constraint.
 \subsection*{Beta}
 \addcontentsline{toc}{subsection}{Beta}
-$\beta$ is a product of many factors, the main being team success, physical locale (weather, population, income), and the social environment of the city\cite{light}. The quantification of these factors is the bulk? of our analysis.
+$\beta$ is a product of many factors, the main being team success, physical locale (weather, population, income), and the social environment of the city\cite{light}. In order to compute a given teams $\beta$ value, we must quantify these factors as follows.
 \subsubsection*{Team Success}
 \addcontentsline{toc}{subsection}{Team Success}
 The success of a team can be quantified as a function of its successes in past post seasons following the following equation,
 \begin{equation}\label{Success}
 S_t = \frac{1.875PSA+3.75PSW+30SC}{N}
 \end{equation}
-Where, $PSA$ is the number of playoff series appearances by a team, $PSW$ is the number of playoff series wins, and $SC$ is the number of stanley cups won over $N$ seasons. Taking the analysis of 2001-2015 from Light \textit{et al.}\cite{light}, and extending it to include the seasons that have passed in the interim, we arrive at the updated Tables \ref{table:Revenue}, \ref{table:St} below. Table \ref{table:Revenue} contains the data related to existing team revenue and the variables in (\ref{Success}). Table \ref{table:St} contains the computations of $S_t$ and its normalized counterpart $s_t$. From these tables, we begin to obtain a sense of how the success of teams such as the Blackhawks and Red Wings generates high normalized success scores, while teams such as the Coyotes who's success is low in post season play have lower normalized scores. This aligns with our assumption that team success will be an important factor in computing $\beta$ for a given team.
-
+Where, $PSA$ is the number of playoff series appearances by a team, $PSW$ is the number of playoff series wins, and $SC$ is the number of Stanley cups won over $N$ seasons. Taking the analysis of 2001-2015 from Light \textit{et al.}\cite{light}, and extending it to include the seasons that have passed in the interim, we arrive at the updated Tables \ref{table:Revenue}, \ref{table:St} below. Table \ref{table:Revenue} contains the data related to existing team revenue and the variables in (\ref{Success}). Table \ref{table:St} contains the computations of $S_t$ and its normalized counterpart $s_t$. This normalization is extended to include the data from the Las Vegas Golden Knights, a team who joined the league following the publication of \cite{light}. From these tables, we begin to obtain a sense of how the success of teams influences the potential revenue of a franchise. Teams such as the Blackhawks and Red Wings generate high normalized success scores, and have some of the highest revenues in the league, while teams such as the Coyotes with low success rates in post season play have lower normalized scores, and lower incomes. This aligns with our assumption that team success will be an important factor in computing $\beta$ for a given team.
 \begin{table}[htp]
 \centerfloat
 \begin{tabular}{lrrrr}
@@ -105,7 +102,6 @@ Las Vegas Knights & 180 &   5 &   3 &   0 \\
 \caption{$^a$in Millions of USD as of 2018 \cite{money}; $^b$Playoff series appearances 2001-2019 \cite{stats}; $^c$Playoff series wins 2001-2019 \cite{stats}; $^d$Stanley Cup wins 2001-2019 \cite{stats}}
 \label{table:Revenue}
 \end{table}
-
 \begin{table}[htp]
 \centering
 \begin{tabular}{lrr}
@@ -150,7 +146,7 @@ Las Vegas Knights & 1.15 & 0.25 \\
 \end{table}
 \subsubsection*{Locale}
 \addcontentsline{toc}{subsection}{Locale}
-The location of a team is very important for hockey. A number of teams in the NHL consistently struggle in terms of revenue, seemingly due to what Light \textit{et al.} and Jones call low locational quality\cite{light}\cite{jones}. In Jones and Ferguson \cite{jones}, the variable,
+In addition to team success rates, the location of a team is very important for hockey. A number of teams in the NHL consistently struggle in terms of revenue, seemingly due to what Light \textit{et al.} and Jones call low location quality\cite{light}\cite{jones}. In Jones and Ferguson \cite{jones}, the variable,
 \begin{equation}\label{ht}
 H_t=\frac{1}{4}\frac{a_t^2}{b_t^2}
 \end{equation}
@@ -161,14 +157,14 @@ is defined to be the location quality, dependent on the equations,
 \begin{equation}\label{b}
 \log(b_t) = \beta_0+\beta_1(CAN)+\beta_2\log(POP)+\beta_3\log(INC)
 \end{equation}
-Where $CAN$ is a binary variable describing if a team is located in Canada, $POP$ is the population of the metro area in millions, and $INC$ is GDP per capita of the area. For our analysis, we shall take the convention of Light \textit{et al.}, and replace the $CAN$ variable with a variable called $WINT$, which will be a binary value describing if a location has a colder mean monthly temperature than 6 \degree C. Using the data from Table 3 of \cite{light}, we perform a least squares regression on the location data in an attempt to compute the coefficients $\alpha_i,\ \beta_i$ from \ref{a} and \ref{b}. The coefficients we obtain are,
+Where $CAN$ is a binary variable describing if a team is located in Canada, $POP$ is the population of the metro area in millions, and $INC$ is GDP per capita of the area. For our analysis, we shall take the convention of Light \textit{et al.}, and replace the $CAN$ variable with a variable called $WINT$, which will be a binary value describing if a location has a colder mean monthly temperature than 6 \degree C. Using the data from Table 3 of \cite{light}, we perform a least squares regression on the location data in an attempt to compute the coefficients $\alpha_i,\ \beta_i$ from (\ref{a}) and (\ref{b}). The coefficients we obtain are,
 \begin{equation}\label{acoeff}
 \log(a_t) = 14.1 + 0.2205(WINT)+.091\log(POP)-0.3766\log(INC)
 \end{equation}
 \begin{equation}\label{bcoeff}
 \log(b_t) = 9.171 + .03(WINT)+.028\log(POP)-.1879\log(INC)
 \end{equation}
-Each of the coefficients we compute have incredibly large T-scores, which aligns with the linear nature of (\ref{a}) and (\ref{b}). As such, we are confident that these coefficients are correct for the purposes of our analysis. With these coefficients computed, we can compute the following location score for our potential Milwaukee team,
+Each of the coefficients we compute have incredibly large t-values, which aligns with the linear nature of (\ref{a}) and (\ref{b}). As such, we are confident that these coefficients are correct for the purposes of our analysis. With these coefficients computed, we can compute the following location score for our potential Milwaukee team,
 \begin{table}[H]
 \centerfloat
 \begin{tabular}{lrrrrrrrr}
@@ -178,11 +174,10 @@ Team & Population$^a$ & GDP per capita$^b$ & Temperature$^c$ & WINT & $a_t$ & $b
 \hline
 Milwaukee & 1.572245 & \$58,680.00 & -2 & 1 & 27583.4 & 1274.342 & 117.1288 & 0.9990123
 \end{tabular}
-\caption{$^a$in Millions *CITE*; $^b$USD *CITE*; $^c$ \degree C *CITE*}
+\caption{$^a$in Millions \cite{population}; $^b$USD \cite{gdp}; $^c$ \degree C \cite{weather}}
 \label{table:Milwaukee_H}
 \end{table}
 So, we see that Milwaukee has a location score that is approximately equal to the mean score for all existing teams. Based on the analysis in \cite{light}, we see that this score is similar to, Boston (121.91), Edmonton (111.6611), and Winnipeg (121.93). So, when considering the necessary team success score for Milwaukee, we will compare with these teams.
-
 \subsubsection*{Social Environment}
 \addcontentsline{toc}{subsection}{Social Environment}
 Finally, we consider how the social environment of a susceptible person could influence the rate at which allegiance can spread. As with \cite{light}, we consider three cases,
@@ -191,12 +186,93 @@ Finally, we consider how the social environment of a susceptible person could in
 \item $p=0.25$: some friends or family in $I_t$\\
 \item $p=0.75$: friends or family in $C_t$
 \end{enumerate}
-
-
+These cases act as a scaling on the success and location scores for a given team. Even if a team is wildly successful in the best possible location, if there is no fan base to interact with, allegiance will never begin to spread.
+\subsection*{Computation of Beta}
+\addcontentsline{toc}{subsection}{Computation of Beta}
+Now that we have defined each of the component variables of $\beta$, we can begin to compute it according to the equation from \cite{light},
+\begin{equation}\label{beta}
+\beta_t=ps_th_t
+\end{equation}
+So, $\beta$ is the product of a teams normalized success and location score, scaled by the social factor. It follows then, that we may write $\ro$ as,
+\begin{equation}\label{Ro}
+\ro = \frac{ps_th_tS}{\gamma} = 9ps_th_t
+\end{equation}
+Letting $S=1$ represent the proportion of the population infected, and $\gamma=\frac{1}{9}$months as noted before. Using this equation, we may compute the cutoff $\ro$ values for fan base growth for each of the above $p$ values in Table \ref{table:Ro}. As in \cite{light}, we see that for very successful teams, such as Chicago and Detroit, the reproductive rate is always greater than zero. As such, we we would expect these teams to have an expanding fan base almost all of the time, at least during the season itself.
+\begin{table}[H]
+\centerfloat
+\begin{tabular}{lrrr}
+\hline
+\multicolumn{4}{c}{$\ro$ score for each $p$ scaling} \\
+Team & $p=0.05$ & $p=0.25$ & $p=0.75$ \\ 
+\hline
+Anaheim Ducks & 0.57 & 2.83 & 8.48 \\ 
+Arizona Coyotes & 0.09 & 0.43 & 1.30 \\ 
+Boston Bruins & 0.74 & 3.71 & 11.13 \\ 
+Buffalo Sabres & 0.19 & 0.95 & 2.84 \\ 
+Calgary Flames & 0.19 & 0.94 & 2.82 \\ 
+Carolina Hurricanes & 0.38 & 1.88 & 5.63 \\ 
+Chicago Blackhawks & 1.33 & 6.64 & 19.93 \\ 
+Colorado Avalanche & 0.59 & 2.95 & 8.84 \\ 
+Columbus Blue Jackets & 0.09 & 0.43 & 1.29 \\ 
+Dallas Stars & 0.23 & 1.13 & 3.38 \\ 
+Detroit Red Wings & 1.19 & 5.97 & 17.90 \\ 
+Edmonton Oilers & 0.16 & 0.78 & 2.33 \\ 
+Florida Panthers & 0.03 & 0.14 & 0.41 \\ 
+LA Kings & 0.59 & 2.94 & 8.83 \\ 
+Minnesota Wild & 0.23 & 1.17 & 3.51 \\ 
+Montreal Canadians & 0.47 & 2.34 & 7.03 \\ 
+Nashville Predators & 0.24 & 1.21 & 3.63 \\ 
+New Jersey Devils & 0.69 & 3.45 & 10.36 \\ 
+NY Islanders & 0.15 & 0.75 & 2.25 \\ 
+NY Rangers & 0.53 & 2.67 & 8.01 \\ 
+Ottawa Senators & 0.45 & 2.27 & 6.82 \\ 
+Philly Flyers & 0.52 & 2.62 & 7.87 \\ 
+Pittsburgh Penguins & 1.34 & 6.70 & 20.11 \\ 
+San Jose Sharks & 0.27 & 1.35 & 4.06 \\ 
+St. Louis Blues & 0.98 & 4.89 & 14.66 \\ 
+Tampa Bay Lightning & 0.56 & 2.78 & 8.35 \\ 
+Toronto Maple Leafs & 0.27 & 1.33 & 3.98 \\ 
+Vancouver Canucks & 0.38 & 1.92 & 5.76 \\ 
+Washington Capitals & 0.64 & 3.22 & 9.67 \\ 
+Winnipeg Jets & 0.10 & 0.48 & 1.43 \\ 
+Las Vegas & 0.09 & 0.43 & 1.30 \\ 
+\hline
+\end{tabular}
+\caption{Values computed according to eqn. \ref{Ro}}
+\label{table:Ro}
+\end{table}
+\section*{Results}
+\addcontentsline{toc}{section}{Results}
+We shall now consider the viability of Milwaukee as a candidate for expansion based on the two cases described above; Milwaukee as an isolated team, and a consideration of Chicago's geographic adjacency.
+\begin{description}
+\item[Isolated Case:] For Milwaukee to be viable, a potential team would need a success rate similar to Boston($\ro > 1$ for $p=0.25,\ 0.75$), Edmonton($\ro > 1$ for $p=0.75$), and Winnipeg($\ro > 1$ for $p=0.75$). Based on the above analysis of $\ro$, we consider Table \ref{table:min_st} which contains the $s_t$ values required to have fan base growth for a given $p$ value,
+\begin{table}[H]
+\centerfloat
+\begin{tabular}{lrrr}
+\hline
+\multicolumn{4}{c}{$\min{s_t}$ for $\ro>1$} \\
+Team & $s_t,\ p=0.05$ & $s_t,\ p=0.25$ & $s_t,\ p=0.75$\\
+\hline
+Milwaukee & 2.224419 & 0.4448838 & 0.1482946\\\hline
+\end{tabular}
+\caption{Computed according to eqn. \ref{Ro}}
+\label{table:min_st}
+\end{table}
+Given Milwaukee's location quality, for $p=0.75$ a potential team would only need to make it to round three of a post season once in 18 years, or make the playoffs 7 times in the 18 years. In the $p=0.25$ case, Milwaukee would need to lose the Stanley Cup finals twice, or make it to the second round of the playoffs 5 times in 18 years. For the $p=0.05$ case, the cutoff is much more severe. A team would need 3 Stanley Cups and an additional finals loss in the next 18 years, or to advance to the third round 14 times over the next eighteen years. This is challenging for even a highly competitive team like Chicago or Pittsburgh.\\
+Estimating the success of a new NHL team is a challenging task. Much of the issue with determining potential success is an attempt to quantify how good a team will be upon their entry, given how the NHL draft system operates. In the past, many expansion teams have struggled initially due to the fact that many well established, talented players in the NHL are under long term contracts with existing teams, making it hard to fill a roster with experienced players. When the NHL expanded to include the Las Vegas Golden Knights in the 2017-2018 season, new drafting rules were agreed upon that allowed the team to draft experienced players from other teams, as well as a normal entry into the existing draft \cite{draft}. In their inaugural season, Las Vegas made it to the Stanley Cup finals, losing to Washington, showing that even new teams to the league could be competitive with this system. In addition to this, it is important to note that Milwaukee also has two unique advantages already. First, the existence of a semi-pro team, the Milwaukee Admirals, who have previously set attendance records. This shows an established hockey fan base in the area. Secondly, Milwaukee benefits from the fact that Wisconsin has produced more professional hockey players than any other state that lacks an NHL team\cite{wisco}. It is reasonable to assume that a team in Wisconsin would be quite popular across the entire state, as other professional sports teams in Wisconsin, the Packers (NFL), Brewers (MLB), and Bucks (NBA), all maintain large and committed fan bases across the state, including cities that are much closer geographically to rival teams (e.g. Menomonie). In addition to this state wide support, a constant stream of local talent could help to create a consistently high ranked team, even in the teams early years.\\
+Overall, it seems that ignoring the close location of Chicago leads to the conclusion that Milwaukee is a viable candidate for an expansion team. Given its proclivity to a higher $p$ value, the required team success rate for its location seems achievable, especially under the drafting rules used for the last expansion team.
+\item[Non-Isolated Case:] If we consider the fact that Chicago is $\sim 100$ miles away from Milwaukee, our results change. Given the success of the Blackhawks (See Table \ref{table:St}) over the last eighteen years, as well as our two team model (\ref{SIRMODEL}), it is reasonable to assume that Chicago already has large ``Infected" and ``Chronic" populations of fans. This fact reduces the size of the susceptible population available to a new team in Milwaukee, and would require more cross team switching to generate a large and stable fan base in Milwaukee. In addition to the lack of fan population available, we also note that Chicago's revenue in 2018 is one of the largest in the entire NHL (Table \ref{table:Revenue}). Given Chicago's success in the league, as well as how long it has been a member of the NHL, we assume that it has control of the net hockey revenue available in the region. Even if a team in Milwaukee was able to steal 30\% of that net income, it would only generate $\sim \$60$ million in revenue, which is significantly lower than even the lowest revenue teams in the league. As such, a team in Milwaukee would most likely struggle to find a financial foothold, as well as grow its fan base in an effective manner. Because of this, Milwaukee is probably not the optimal choice for a new expansion team. Based on the spatial distribution of existing NHL franchises, as well as what we know from eqn \ref{ht}, a better location for a new franchise might be in an area like northern Idaho or Montana. This location is isolated from existing teams, so revenue would not need to be shared as much, but maintains a colder climate, which, as our analysis shows is an important factor to consider.
+\end{description}
 \begin{thebibliography}{9}
 \bibitem{light} J. Light, A. Chernin, and J. M. Heffernan, ``NHL expansion and fan allegiance: a mathematical modelling study,” \textit{Mathematics-in-Industry Case Studies}, vol. 7, no. 1, Apr. 2016.
 \bibitem{money} M. Ozanian and K. Badenhausen, ``The NHLs Most Valuable Teams” \textit{Forbes}, 21-Feb-2019. [Online]. Available: \url{https://www.forbes.com/sites/mikeozanian/2018/12/05/the-nhls-most-valuable-teams/}. [Accessed: 25-Sep-2019].
 \bibitem{stats}  HockeyDB.com (2019) National Hockey League history and statistics. \url{http://www.hockeydb.com/ihdb/stats/leagues/141.html}. Web
 \bibitem{jones}J. C. H. Jones and D. G. Ferguson, ``Location and Survival in the National Hockey League,” \textit{The Journal of Industrial Economics}, vol. 36, no. 4, p. 443, Jun. 1988.
+\bibitem{population} US Census Bureau and Data Integration Division, ``Population Estimates,” \textit{Metropolitan and Micropolitan Statistical Area Totals Dataset: Population and Estimated Components of Change: April 1, 2010 to July 1, 2014 - U.S Census Bureau}. [Online]. \url{https://web.archive.org/web/20150504102404/http://www.census.gov/popest/data/metro/totals/2014/CBSA-EST2014-alldata.html}. [Accessed: 30-Sep-2019].
+\bibitem{gdp} ``Regional Economic Accounts GDP and Personal Income,” \textit{BEA}. [Online]. \url{https://apps.bea.gov/itable/drilldown.cfm?reqid=70&stepnum=40&Major_Area=5&State=5&Area=XX&TableId=504&Statistic=1&Year=2014&YearBegin=-1&Year_End=-1&Unit_Of_Measure=Levels&Rank=1&Drill=1&nRange=5}. [Accessed: 28-Sep-2019].
+\bibitem{weather} ``Milwaukee Temperatures: Averages by Month,” \textit{Milwaukee WI Average Temperatures by Month - Current Results}. [Online]. \url{https://www.currentresults.com/Weather/Wisconsin/Places/milwaukee-temperatures-by-month-average.php}. [Accessed: 30-Sep-2019].
+\bibitem{whynot} J. Hand, C. Jozwik, H. Magner, Z. Brooke, A. Landowski, A. Parquette, and E. Johnson, ``Why Milwaukee is Not an NHL City,” \textit{Milwaukee Magazine}, 16-Nov-2018. [Online]. \url{https://www.milwaukeemag.com/milwaukee-not-nhl-city/}. [Accessed: 29-Sep-2019].
+\bibitem{draft} ``2017 NHL Expansion Draft,” \textit{Wikipedia}, 27-Apr-2019. [Online]. \url{https://en.wikipedia.org/wiki/2017_NHL_Expansion_Draft}. [Accessed: 29-Sep-2019].
+\bibitem{wisco} ``NHL Players Born in Wisconsin, United States,” \textit{Hockey}. [Online]. \url{https://www.hockey-reference.com/friv/birthplaces.cgi?country=US&province&state=WI&fbclid=IwAR1vb6vzR95-DX0B_zRyV_gLxYcWMneos3Ppn8RBNsnHQqzA9d4sJj4X_aA}. [Accessed: 29-Sep-2019].
 \end{thebibliography}
 \end{document}                          % The required last line

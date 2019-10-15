@@ -1,7 +1,10 @@
-\contentsline {section}{Introduction}{1}{section*.2}
-\contentsline {section}{Methods}{1}{section*.3}
-\contentsline {subsection}{SIR Model}{1}{section*.4}
-\contentsline {subsection}{Beta}{2}{section*.5}
-\contentsline {subsection}{Team Success}{2}{section*.6}
-\contentsline {subsection}{Locale}{3}{section*.7}
-\contentsline {subsection}{Social Environment}{6}{section*.8}
+\contentsline {section}{Abstract}{1}{section*.2}
+\contentsline {section}{Introduction}{1}{section*.3}
+\contentsline {section}{Methods}{2}{section*.4}
+\contentsline {subsection}{SIR Model}{2}{section*.5}
+\contentsline {subsection}{Beta}{3}{section*.6}
+\contentsline {subsection}{Team Success}{3}{section*.7}
+\contentsline {subsection}{Locale}{6}{section*.8}
+\contentsline {subsection}{Social Environment}{7}{section*.9}
+\contentsline {subsection}{Computation of Beta}{7}{section*.10}
+\contentsline {section}{Results}{9}{section*.11}
