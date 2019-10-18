@@ -1,4 +1,4 @@
-setwd("~/Desktop/PSM/Fall 2019/Capstone/Mayo/Distributions")
+#setwd("~/Desktop/PSM/Fall 2019/Capstone/Mayo/Distributions")
 rm(list = ls())
 library(fitdistrplus)
 library(logspline)
@@ -17,8 +17,9 @@ orderEntry.weib$aic
 orderEntry.exp <- fitdist(orderEntry, "exp")
 plot(orderEntry.exp)
 orderEntry.exp$aic
-
-
+orderEntry.gam <- fitdist(orderEntry, "gamma")
+plot(orderEntry.gam)
+orderEntry.gam$aic
 
 
 
@@ -28,6 +29,24 @@ orderEntry.exp$aic
 
 
 orderEntryVerification <- X$Order.Entry.Verification[!is.na(X$Order.Entry.Verification)]
+hist(orderEntryVerification) ## Looks Normal?
+orderEntryVerification.norm <- fitdist(orderEntryVerification, "norm")
+plot(orderEntryVerification.norm)
+orderEntryVerification.norm$aic
+orderEntryVerification.weib <- fitdist(orderEntryVerification, "weibull")
+plot(orderEntryVerification.weib)
+orderEntryVerification.weib$aic
+orderEntryVerification.exp <- fitdist(orderEntryVerification, "dpois")
+plot(orderEntryVerification.exp)
+orderEntryVerification.exp$aic
+orderEntryVerification.gam <- fitdist(orderEntryVerification, "gamma")
+plot(orderEntryVerification.gam)
+orderEntryVerification.gam$aic
+
+
+
+
+
 oralDrugPrep <- X$Oral.drug.prep[!is.na(X$Oral.drug.prep)]
 ivDrugPrep <- X$IV.drugprep[!is.na(X$IV.drugprep)]
 orderPrepVerification <- X$Order.prep.verification[!is.na(X$Order.prep.verification)]
