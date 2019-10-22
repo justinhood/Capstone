@@ -5,13 +5,21 @@
 #include <random>
 #include <string>
 #include <queue>
+#include <algorithm>
 #include "Script.h"
-
+#include "Worker.h"
 
 using namespace std;
 
 //Globals
 int numOrders;
+int tic;
+int nSteps;
+int nTrials;
+vector<Worker> idleWorkers;
+vector<Worker> activeWorkers;
+
+////Setup Queues
 queue<double> oralIncoming;
 queue<double> ivIncoming;
 queue<double> entryTimes;
@@ -20,7 +28,20 @@ queue<double> oralPrepTimes;
 queue<double> ivPrepTimes;
 queue<double> prepVerTimes;
 queue<double> dispenseTimes;
-
+////Process Queues
+queue<Script> entryQ;
+queue<Script> entryVerQ;
+queue<Script> oralFillQ;
+queue<Script> ivFillQ;
+queue<Script> fillVerQ;
+queue<Script> distQ;
+//////Queue Length Holder
+vector<int> entryQLengths;
+vector<int> entryVerQLengths;
+vector<int> oralFillQLengths;
+vector<int> ivFillQLengths;
+vector<int> fillVerQLengths;
+vector<int> distQLengths;
 
 //Funky Bois
 queue<double> getOralIncoming(int hours);
@@ -41,19 +62,35 @@ int main(){
 	int numT; //Number of Technicians
 	cout << "Please enter the duration of the simulation in hours:" <<  endl;
 	cin >> hrs;
+	cout << "Please enter the number of steps per minute:" << endl;
+	cin >> tic;
 	cout << "Please enter the number of Pharmacists in the simulation:" << endl;
 	cin >> numP;
 	cout << "Please enter the number of Technicians in the sumulation:" << endl;
 	cin >> numT;
-	cout << hrs << numP << numT << endl;
+
+	nSteps=tic*hrs*60;
+	
+	for(int i=1; i<=numP; i++){
+		idleWorkers.push_back(Worker(false, false));
+	}
+	for(int i=1; i<numT; i++){
+		idleWorkers.push_back(Worker(true, false));
+	}
+	idleWorkers.push_back(Worker(true, true));
+	for(int i=0; i<idleWorkers.size(); i++){
+		cout << "Is Tech: " << idleWorkers[i].getTech() << ", Is IV: " << idleWorkers[i].getIV() << endl;
+	}
+	cout << "***************************************" << endl;
+	random_shuffle(idleWorkers.begin(), idleWorkers.end());
+	for(int i=0; i<idleWorkers.size(); i++){
+		cout << "Is Tech: " << idleWorkers[i].getTech() <<     ", Is IV: " << idleWorkers[i].getIV() << endl;
+	}
 	
 	//Setup of our time buffers.
 	oralIncoming = getOralIncoming(hrs);
 	ivIncoming = getIVIncoming(hrs);
-	cout << "Oral Incoming: " << oralIncoming.size() << endl;
-	cout << "IV Incoming: " << ivIncoming.size() << endl;
 	numOrders = oralIncoming.size()+ivIncoming.size();
-	cout << numOrders << endl;
 	entryTimes = getEntryTimes(numOrders);
 	entryVerTimes = getEntryVerTimes(numOrders);
 	oralPrepTimes = getOralPrepTimes(oralIncoming.size());
