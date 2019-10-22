@@ -1,4 +1,4 @@
-#setwd("~/Desktop/PSM/Fall 2019/Capstone/Mayo/Distributions")
+setwd("~/Desktop/PSM/Fall 2019/Capstone/Mayo/Distributions")
 rm(list = ls())
 library(fitdistrplus)
 library(logspline)
