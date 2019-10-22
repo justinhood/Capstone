@@ -2,3 +2,7 @@
 *.aux
 *.log
 *.sync*
+
+##C++ garbage
+*.o
+*.exe
