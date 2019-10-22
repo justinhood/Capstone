@@ -112,20 +112,151 @@ gofstat(oralDrugPrep.log)
 oralDrugPrep.w <- fitdist(oralDrugPrep, "weibull")
 plot(oralDrugPrep.w)
 gofstat(oralDrugPrep.w)
-
+##Beta
 oralDrugPrep.b <- fitdist(oralDrugPrep/25, "beta")
 plot(oralDrugPrep.b)
 gofstat(oralDrugPrep.b)
 
-oralDrugPrep.b <- fitdist(((oralDrugPrep-min(oralDrugPrep))/(max(oralDrugPrep)-min(oralDrugPrep))), "beta")
-plot(oralDrugPrep.b)
-gofstat(oralDrugPrep.b)
 
 
-
+## IV drug prep
 ivDrugPrep <- X$IV.drugprep[!is.na(X$IV.drugprep)]
+#Histogram
+hist(ivDrugPrep)
+png("IVPrepHist.png")
+hist(ivDrugPrep)
+dev.off()
+
+#Cullen Frey
+descdist(ivDrugPrep, discrete = FALSE) #
+png("IVPrepCullen")
+descdist(ivDrugPrep, discrete = FALSE)
+dev.off()
+
+##Normal AIC 163.8044
+ivDrugPrep.norm <- fitdist(ivDrugPrep, "norm")
+plot(ivDrugPrep.norm)
+gofstat(ivDrugPrep.norm)
+##Gamma AIC 166.5731
+ivDrugPrep.gamma <- fitdist(ivDrugPrep, "gamma")
+plot(ivDrugPrep.gamma)
+gofstat(ivDrugPrep.gamma)
+##LogNormal AIC 173.3341
+ivDrugPrep.log <- fitdist(ivDrugPrep, "lnorm")
+plot(ivDrugPrep.log)
+gofstat(ivDrugPrep.log)
+##Weibull 163.1314
+ivDrugPrep.w <- fitdist(ivDrugPrep, "weibull")
+plot(ivDrugPrep.w)
+gofstat(ivDrugPrep.w)
+
+
+###Prep verification
 orderPrepVerification <- X$Order.prep.verification[!is.na(X$Order.prep.verification)]
+
+#Histogram
+hist(orderPrepVerification)
+png("prepVerification.png")
+hist(orderPrepVerification)
+dev.off()
+
+#Cullen Frey
+descdist(ivDrugPrep, discrete = FALSE) #
+png("IVPrepCullen")
+descdist(ivDrugPrep, discrete = FALSE)
+dev.off()
+
+##Normal AIC 132.4465
+orderPrepVerification.norm <- fitdist(orderPrepVerification, "norm")
+plot(orderPrepVerification.norm)
+gofstat(orderPrepVerification.norm)
+##Gamma AIC 129.8661
+orderPrepVerification.gamma <- fitdist(orderPrepVerification, "gamma")
+plot(orderPrepVerification.gamma)
+gofstat(orderPrepVerification.gamma)
+##LogNormal AIC 132.7320
+orderPrepVerification.log <- fitdist(orderPrepVerification, "lnorm")
+plot(orderPrepVerification.log)
+gofstat(orderPrepVerification.log)
+##Weibull 130.6478
+orderPrepVerification.w <- fitdist(orderPrepVerification, "weibull")
+plot(orderPrepVerification.w)
+gofstat(orderPrepVerification.w)
+
+
 dispensing <- X$Dispensing[!is.na(X$Dispensing)]
+#Histogram
+hist(dispensing)
+png("dispensingHist.png")
+hist(dispensing)
+dev.off()
+
+#Cullen Frey
+descdist(dispensing, discrete = FALSE) #
+png("dispensingCullen")
+descdist(dispensing, discrete = FALSE)
+dev.off()
+
+##Normal AIC 80.57850
+dispensing.norm <- fitdist(dispensing, "norm")
+plot(dispensing.norm)
+gofstat(dispensing.norm)
+##Gamma AIC 80.57061
+dispensing.gamma <- fitdist(dispensing, "gamma")
+plot(dispensing.gamma)
+gofstat(dispensing.gamma)
+##LogNormal AIC 81.21407
+dispensing.log <- fitdist(dispensing, "lnorm")
+plot(dispensing.log)
+gofstat(dispensing.log)
+##Weibull 81.42169
+dispensing.w <- fitdist(dispensing, "weibull")
+plot(dispensing.w)
+gofstat(dispensing.w)
+
+
+
+
+###Oral Incoming
 oralIncoming <- X$Oral.Incoming[!is.na(X$Oral.Incoming)]
+#Histogram
+hist(oralIncoming)
+png("OralIncomingHist.png")
+hist(oralIncoming)
+dev.off()
+
+#Cullen Frey
+descdist(oralIncoming, discrete = FALSE) 
+png("OralIncomingCullen")
+descdist(oralIncoming, discrete = FALSE)
+dev.off()
+
+##Exponential AIC 306.6402
+oralIncoming.exp <- fitdist(oralIncoming, "exp")
+plot(oralIncoming.exp)
+gofstat(oralIncoming.exp)
+##Norm AIC 339.6954
+oralIncoming.norm <- fitdist(oralIncoming, "norm")
+plot(oralIncoming.norm)
+gofstat(oralIncoming.norm)
+
+
+
+###IV Incoming
 ivIncoming <- X$IV.Incoming[!is.na(X$IV.Incoming)]
+#Histogram
 hist(ivIncoming)
+png("IVIncomingHist.png")
+hist(ivIncoming)
+dev.off()
+
+#Cullen Frey
+descdist(ivIncoming, discrete = FALSE) 
+png("IVIncomingCullen")
+descdist(ivIncoming, discrete = FALSE)
+dev.off()
+
+##Exponential AIC 383.5409
+ivIncoming.exp <- fitdist(ivIncoming, "exp")
+plot(ivIncoming.exp)
+gofstat(ivIncoming.exp)
