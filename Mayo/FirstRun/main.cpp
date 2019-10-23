@@ -1,5 +1,6 @@
 //Justin Hood 2019 Capstone Project
 
+#include <chrono>
 #include <iostream>
 #include <ctime>
 #include <random>
@@ -14,8 +15,10 @@ using namespace std;
 //Globals
 int numOrders;
 int tic;
+double toc;
 int nSteps;
 int nTrials;
+int step;
 vector<Worker> idleWorkers;
 vector<Worker> activeWorkers;
 
@@ -68,9 +71,14 @@ int main(){
 	cin >> numP;
 	cout << "Please enter the number of Technicians in the sumulation:" << endl;
 	cin >> numT;
-
-	nSteps=tic*hrs*60;
 	
+	chrono::steady_clock::time_point begin = chrono::steady_clock::now();
+	//Compute number of steps for full simulaiton based on tic and hour inputs
+	nSteps=tic*hrs*60;
+	toc = 1.0/tic;
+	cout << "toc: " << toc << endl;
+	
+	//Setup workers. For base case we have n pharmacists, and m techs with only one tech being an IV designated worker. Workers start in the Idle case, as no products are in the queues yet. Upon the arrival of the first script to the entry Q, the first worker in the shuffled vector will get a chance to do it.
 	for(int i=1; i<=numP; i++){
 		idleWorkers.push_back(Worker(false, false));
 	}
@@ -78,16 +86,10 @@ int main(){
 		idleWorkers.push_back(Worker(true, false));
 	}
 	idleWorkers.push_back(Worker(true, true));
-	for(int i=0; i<idleWorkers.size(); i++){
-		cout << "Is Tech: " << idleWorkers[i].getTech() << ", Is IV: " << idleWorkers[i].getIV() << endl;
-	}
-	cout << "***************************************" << endl;
+	//This shuffles the vector for fairness in the simulation.
 	random_shuffle(idleWorkers.begin(), idleWorkers.end());
-	for(int i=0; i<idleWorkers.size(); i++){
-		cout << "Is Tech: " << idleWorkers[i].getTech() <<     ", Is IV: " << idleWorkers[i].getIV() << endl;
-	}
 	
-	//Setup of our time buffers.
+	//Setup of our time buffers. After this setup, we have the correct times for each stage of the process. When a script is pushed into the initial buffer, it absorbs the relevant times  for its processing so that it can share with the class as it moves from buffer->worker->buffer.
 	oralIncoming = getOralIncoming(hrs);
 	ivIncoming = getIVIncoming(hrs);
 	numOrders = oralIncoming.size()+ivIncoming.size();
@@ -98,8 +100,230 @@ int main(){
 	prepVerTimes = getPrepVerTimes(numOrders);
 	dispenseTimes = getDispenseTimes(numOrders);
 	
-	//Setup of Employees
-	
+	//main loop. oh boy
+	step=0;
+	Script nextOral = Script(false);
+	Script nextIV = Script(true);
+	while(step < nSteps){
+		/*cout << "Oral Head: " << oralIncoming.front() << ", Oral Size: " << oralIncoming.size() << endl;
+		cout << "IV Head: " << ivIncoming.front() << ", IV Size: " << ivIncoming.size() << endl;
+		cout << "EntryQ size: " << entryQ.size() << endl;*/
+		//First, we subtract a tic from the front of the IV/Oral incoming buffers, checking on whether it goes into the queue. In case of both, we conisider which one technically goes first.
+		if(oralIncoming.size() > 0 && ivIncoming.size() > 0){
+			//First Case, oral enters, but iv does not.
+			if(oralIncoming.front()-toc <=0 && ivIncoming.front()-toc >0){
+				//Entry Time
+				nextOral.setEntryTime(entryTimes.front());
+				entryTimes.pop();
+				//Entry Ver Time
+				nextOral.setEntryVerTime(entryVerTimes.front());
+				entryVerTimes.pop();
+				//This is oral, so oral prep
+				nextOral.setFillTime(oralPrepTimes.front());
+				oralPrepTimes.pop();
+				//prep ver times
+				nextOral.setFillVerTime(prepVerTimes.front());
+				prepVerTimes.pop();
+				//Dispense Times
+				nextOral.setDispTime(dispenseTimes.front());
+				dispenseTimes.pop();
+				//Set wait time to zero and inQ. Push to entry Queue.
+				nextOral.setWaitTime(0);
+				nextOral.setInQueue(true);
+				entryQ.push(nextOral);
+				
+				//Step IV, pop the front off of the Oral
+				ivIncoming.front()-=toc;
+				oralIncoming.pop();
+			}else if(oralIncoming.front()-toc >0 && ivIncoming.front()-toc <= 0){
+				//Entry Time
+				nextIV.setEntryTime(entryTimes.front());
+				entryTimes.pop();
+				//Entry Ver Time
+				nextIV.setEntryVerTime(entryVerTimes.front());
+				entryVerTimes.pop();
+				//This is IV, so IV prep
+				nextIV.setFillTime(ivPrepTimes.front());
+				ivPrepTimes.pop();
+				//prep ver times
+				nextIV.setFillVerTime(prepVerTimes.front());
+				prepVerTimes.pop();
+				//Dispense Times
+				nextIV.setDispTime(dispenseTimes.front());
+				dispenseTimes.pop();
+				//Set wait time to zero and inQ. Push to entry Queue.
+				nextIV.setWaitTime(0);
+				nextIV.setInQueue(true);
+				entryQ.push(nextIV);
+				//Step IV, pop the front off of the Oral
+				oralIncoming.front()-=toc;
+				ivIncoming.pop();
+			} else if(oralIncoming.front()-toc <= 0 && ivIncoming.front()-toc <= 0){
+				//Case where oral is first, prioritize oral on tie(if possible)
+				if(oralIncoming.front()-toc >= ivIncoming.front()){
+					//OralTYME
+					//Entry Time
+					nextOral.setEntryTime(entryTimes.front());
+					entryTimes.pop();
+					//Entry Ver Time
+					nextOral.setEntryVerTime(entryVerTimes.front());
+					entryVerTimes.pop();
+					//This is oral, so oral prep
+					nextOral.setFillTime(oralPrepTimes.front());
+					oralPrepTimes.pop();
+					//prep ver times
+					nextOral.setFillVerTime(prepVerTimes.front());
+					prepVerTimes.pop();
+					//Dispense Times
+					nextOral.setDispTime(dispenseTimes.front());
+					dispenseTimes.pop();
+					//Set wait time to zero and inQ. Push to entry Queue.
+					nextOral.setWaitTime(0);
+					nextOral.setInQueue(true);
+					entryQ.push(nextOral);
+					//Pop the front off of oral Time
+					oralIncoming.pop();
+
+					//IVTYME
+					//Entry Time
+					nextIV.setEntryTime(entryTimes.front());
+					entryTimes.pop();
+					//Entry Ver Time
+					nextIV.setEntryVerTime(entryVerTimes.front());
+					entryVerTimes.pop();
+					//This is IV, so IV prep
+					nextIV.setFillTime(ivPrepTimes.front());
+					ivPrepTimes.pop();
+					//prep ver times
+					nextIV.setFillVerTime(prepVerTimes.front());
+					prepVerTimes.pop();
+					//Dispense Times
+					nextIV.setDispTime(dispenseTimes.front());
+					dispenseTimes.pop();
+					//Set wait time to zero and inQ. Push to entry Queue.
+					nextIV.setWaitTime(0);
+					nextIV.setInQueue(true);
+					entryQ.push(nextIV);
+					//pop the front off of Iv time
+					ivIncoming.pop();
+
+				}else{
+					//IVTYME
+					//Entry Time
+					nextIV.setEntryTime(entryTimes.front());
+					entryTimes.pop();
+					//Entry Ver Time
+					nextIV.setEntryVerTime(entryVerTimes.front());
+					entryVerTimes.pop();
+					//This is IV, so IV prep
+					nextIV.setFillTime(ivPrepTimes.front());
+					ivPrepTimes.pop();
+					//prep ver times
+					nextIV.setFillVerTime(prepVerTimes.front());
+					prepVerTimes.pop();
+					//Dispense Times
+					nextIV.setDispTime(dispenseTimes.front());
+					dispenseTimes.pop();
+					//Set wait time to zero and inQ. Push to entry Queue.
+					nextIV.setWaitTime(0);
+					nextIV.setInQueue(true);
+					entryQ.push(nextIV);
+					//pop the front off of Iv time
+					ivIncoming.pop();
+
+					//OralTYME
+					//Entry Time
+					nextOral.setEntryTime(entryTimes.front());
+					entryTimes.pop();
+					//Entry Ver Time
+					nextOral.setEntryVerTime(entryVerTimes.front());
+					entryVerTimes.pop();
+					//This is oral, so oral prep
+					nextOral.setFillTime(oralPrepTimes.front());
+					oralPrepTimes.pop();
+					//prep ver times
+					nextOral.setFillVerTime(prepVerTimes.front());
+					prepVerTimes.pop();
+					//Dispense Times
+					nextOral.setDispTime(dispenseTimes.front());
+					dispenseTimes.pop();
+					//Set wait time to zero and inQ. Push to entry Queue.
+					nextOral.setWaitTime(0);
+					nextOral.setInQueue(true);
+					entryQ.push(nextOral);
+					//Pop the front off of oral Time
+					oralIncoming.pop();
+				}
+			}else{
+				oralIncoming.front()-=toc;
+				ivIncoming.front()-=toc;
+			}
+		} else if(oralIncoming.size() > 0 && ivIncoming.size() == 0){
+			////If iv is empty, the show must go on.
+			//Entry Time
+                        nextOral.setEntryTime(entryTimes.front());
+                        entryTimes.pop();
+			//Entry Ver Time
+			nextOral.setEntryVerTime(entryVerTimes.front());
+			entryVerTimes.pop();
+			//This is oral, so oral prep
+			nextOral.setFillTime(oralPrepTimes.front());
+			oralPrepTimes.pop();
+			//prep ver times
+			nextOral.setFillVerTime(prepVerTimes.front());
+			prepVerTimes.pop();
+			//Dispense Times
+			nextOral.setDispTime(dispenseTimes.front());
+			dispenseTimes.pop();
+			//Set wait time to zero and inQ. Push to entry Queue.
+			nextOral.setWaitTime(0);
+			nextOral.setInQueue(true);
+			entryQ.push(nextOral);
+			//Pop the front off of oral Time
+			oralIncoming.pop();
+		}else if(oralIncoming.size() == 0 && ivIncoming.size() > 0){
+			////Fringe case
+			//IVTYME
+			//Entry Time
+			nextIV.setEntryTime(entryTimes.front());
+			entryTimes.pop();
+			//Entry Ver Time
+			nextIV.setEntryVerTime(entryVerTimes.front());
+			entryVerTimes.pop();
+			//This is IV, so IV prep
+			nextIV.setFillTime(ivPrepTimes.front());
+			ivPrepTimes.pop();
+			//prep ver times
+			nextIV.setFillVerTime(prepVerTimes.front());
+			prepVerTimes.pop();
+			//Dispense Times
+			nextIV.setDispTime(dispenseTimes.front());
+			dispenseTimes.pop();
+			//Set wait time to zero and inQ. Push to entry Queue.
+			nextIV.setWaitTime(0);
+			nextIV.setInQueue(true);
+			entryQ.push(nextIV);
+			//pop the front off of Iv time
+			ivIncoming.pop();
+		}
+		/* Now that new orders have been entered into the first queue, */
+		/*cout << "Oral Head: " << oralIncoming.front() << ", Oral Size: " << oralIncoming.size() << endl;
+                cout << "IV Head: " << ivIncoming.front() << ", IV Size: " << ivIncoming.size()     << endl;
+                cout << "EntryQ size: " << entryQ.size() << endl;
+		cout << "*****************************************************" << endl;*/
+		
+		
+		step+=1;
+	}
+	cout << "Oral Head: " << oralIncoming.front() << ", Oral Size: " << oralIncoming.size() << endl;
+	cout << "IV Head: " << ivIncoming.front() << ", IV Size: " << ivIncoming.size()         << endl;
+	cout << "EntryQ size: " << entryQ.size() << endl;
+	cout << "*****************************" << endl;
+
+
+	chrono::steady_clock::time_point end = chrono::steady_clock::now();
+	std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << std::endl;
+	std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::seconds> (end - begin).count() << "[s]" << std::endl;
 	return 0;
 }
 
