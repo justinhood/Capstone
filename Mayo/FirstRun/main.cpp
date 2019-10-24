@@ -21,6 +21,13 @@ int nTrials;
 int step;
 vector<Worker> idleWorkers;
 vector<Worker> activeWorkers;
+string entry = "Entry";
+string entryVer = "EntryVer";
+string fill = "Fill";
+string fillVer = "FillVer";
+string dispense = "Dispense";
+
+
 
 ////Setup Queues
 queue<double> oralIncoming;
@@ -306,20 +313,50 @@ int main(){
 			//pop the front off of Iv time
 			ivIncoming.pop();
 		}
-		/* Now that new orders have been entered into the first queue, */
-		/*cout << "Oral Head: " << oralIncoming.front() << ", Oral Size: " << oralIncoming.size() << endl;
-                cout << "IV Head: " << ivIncoming.front() << ", IV Size: " << ivIncoming.size()     << endl;
-                cout << "EntryQ size: " << entryQ.size() << endl;
-		cout << "*****************************************************" << endl;*/
+		/* Now that new orders have been entered into the first queue, we check all active tasks to see if the time step
+		 * finishes the task at hand*/
+		//Check Whole Vector
+		Script transition;
+		for(int i=0; i < activeWorkers.size(); i++){
+			//Check if task will finish
+			if(activeWorkers[i].getWorkTime()-toc <= 0){
+				//Push to relevant queue after completion.
+				switch(activeWorkers[i].getTask()){
+					case entry:
+						//Pull the script
+						transition = activeWorkers[i].getCurrentScript();
+						//Make Idle
+						activeWorkers[i].setIdle(true);
+						//Put in Idle Queue
+						idleWorkers.push_back(activeWorkers[i]);
+						//Push Script to ENTRYVER QUEUE
+						entryVerQ.push(transition);
+					case entryVer:
+						//Pull the script
+						transition = activeWorkers[i].getCurrentScript();
+						//Make Idle
+						activeWorkers[i].setIdle(true);
+						//Put in Idle Queue
+						idleWorkers.push_back(activeWorkers[i]);
+						//Push to appropriate fill queue
+						if(transition.getIV()){
+							ivFillQ.push(transition);
+						}else{
+							oralFillQ.push(transition);
+						}
+					case fill:
+						//Pull the Script
+						transition = activeWorkers[i].getCurrentScript();
+						//Make Idle
+						activeWorkers[i]/s
+				}		
+			}
 		
-		
+		}	
+
+		//Increment the loop
 		step+=1;
 	}
-	cout << "Oral Head: " << oralIncoming.front() << ", Oral Size: " << oralIncoming.size() << endl;
-	cout << "IV Head: " << ivIncoming.front() << ", IV Size: " << ivIncoming.size()         << endl;
-	cout << "EntryQ size: " << entryQ.size() << endl;
-	cout << "*****************************" << endl;
-
 
 	chrono::steady_clock::time_point end = chrono::steady_clock::now();
 	std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << std::endl;

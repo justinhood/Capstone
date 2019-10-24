@@ -28,6 +28,11 @@ class Worker{
 		void updateWorkTime(double t);
 		double getWorkTime();
 		void setWorkTime(double t);
+		string getTask();
+		void setTask(string s);
+
+
+
 	private:
 		bool isTech;
 		bool isIV;
@@ -36,5 +41,5 @@ class Worker{
 		double workTime;
 		//vector<bool> idleChecks;
 		Script currentScript;
-
+		string currentTask;
 };
