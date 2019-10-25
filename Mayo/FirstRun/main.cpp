@@ -8,8 +8,11 @@
 #include <queue>
 #include <algorithm>
 #include <map>
+#include <fstream>
 #include "Script.h"
 #include "Worker.h"
+
+
 
 using namespace std;
 
@@ -23,12 +26,6 @@ int step;
 vector<Worker> idleWorkers;
 vector<Worker> activeWorkers;
 int orderNum;
-/*string entry = "Entry";
-string entryVer = "EntryVer";
-string fill = "Fill";
-string fillVer = "FillVer";
-string dispense = "Dispense";
-*/
 
 
 ////Setup Queues
@@ -88,6 +85,27 @@ int main(){
 	toc = 1.0/tic;
 	cout << "toc: " << toc << endl;
 	
+	//Setup output files
+	ofstream oInOut;
+	oInOut.open("OralIncomingCounts.txt");
+	ofstream iInOut;
+	iInOut.open("IVIncomingCounts.txt");
+	ofstream entryOut;
+	entryOut.open("entryQueueCounts.txt");
+	ofstream entryVerOut;
+	entryVerOut.open("entryVerQueueCounts.txt");
+	ofstream oralFillOut;
+	oralFillOut.open("oralFillQueueCounts.txt");
+	ofstream ivFillOut;
+	ivFillOut.open("ivFillQueueCounts.txt");
+	ofstream fillVerOut;
+	fillVerOut.open("fillVerQueueCounts.txt");
+	ofstream dispOut;
+	dispOut.open("dispQueueCounts.txt");
+	ofstream endOut;
+	endOut.open("endQueueCounts.txt");
+	
+	
 	//Setup workers. For base case we have n pharmacists, and m techs with only one tech being an IV designated worker. Workers start in the Idle case, as no products are in the queues yet. Upon the arrival of the first script to the entry Q, the first worker in the shuffled vector will get a chance to do it.
 	for(int i=1; i<=numP; i++){
 		idleWorkers.push_back(Worker(false, false));
@@ -110,6 +128,11 @@ int main(){
 	prepVerTimes = getPrepVerTimes(numOrders);
 	dispenseTimes = getDispenseTimes(numOrders);
 	
+	oInOut << oralIncoming.size();
+	oInOut.close();
+	iInOut << ivIncoming.size();
+	iInOut.close();
+
 	cout << "Oral Incoming + IV incoming=" << numOrders << endl;
 	cout << "***************************" << endl;
 	//main loop. oh boy
@@ -542,13 +565,33 @@ int main(){
 		for(int i=0; i<idleWorkers.size(); i++){
 			idleWorkers[i].updateIdleTime(toc);
 		}
+		//Print the data
+		entryOut << entryQ.size() << ",";
+		entryVerOut << entryVerQ.size() << ",";
+		oralFillOut << oralFillQ.size() << ",";
+		ivFillOut << ivFillQ.size() << ",";
+		fillVerOut << fillVerQ.size() << ",";
+		dispOut << dispQ.size() << ",";
+		endOut << endQ.size() << ",";
+
 		//Increment the loop
 		step+=1;
 	}
+	entryOut.close();
+	entryVerOut.close();
+	oralFillOut.close();
+	ivFillOut.close();
+	fillVerOut.close();
+	dispOut.close();
+	endOut.close(); 
 	//Now that the logic is a flowin, lets print some test shit. 
 	cout << "endQ size=" << endQ.size() << endl;
 	cout << "Please God" << endl;
 
+	//Look at idle times
+	for(int i=0; i< activeWorkers.size(); i++){
+		cout << "Idle time (s): " << activeWorkers[i].getIdleTime() << endl;
+	}
 	chrono::steady_clock::time_point end = chrono::steady_clock::now();
 	std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << std::endl;
 	std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::seconds> (end - begin).count() << "[s]" << std::endl;

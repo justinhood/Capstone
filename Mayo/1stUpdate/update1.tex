@@ -1,0 +1,40 @@
+\documentclass[letterpaper,10pt]{article}
+\usepackage[top=2cm, bottom=1.5cm, left=1cm, right=1cm]{geometry}
+\usepackage{amsmath, amssymb, amsthm,graphicx, enumitem}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{\today}
+\chead{MSCS 791 Status Update 1}
+\rhead{Justin Hood}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newtheorem{lem}{Lemma}
+\begin{document}
+After working on the Mayo project for about two weeks, I have accomplished a few milestones for implementation, the main ones being,
+\begin{enumerate}
+\item Computation of distribution estimations of the given time data.
+\item Decision to implement my own discrete event modeler custom built to this model.
+\end{enumerate}
+In regards to the first milestone, my results follow in tabular form,
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Data & Distribution & Parameters\\\hline
+Order Entry Times & Normal & $\mu=9.873784,\ \sigma=2.095579$\\\hline
+Entry Verification Times & Uniform & min=$1.2726$, max=$3.4059$\\\hline
+Oral Drug Preparation Time & log-normal & $\mu=2.99140489,\ \sigma=0.06300657$\\\hline
+IV Drug Preparation Time & Weibull & shape=$2.362195$, scale=$6.359247$\\\hline
+Order Preparation Verification Time & Weibull & shape=$2.911269$, scale=$2.143830$\\\hline
+Dispensing Time & Normal & $\mu=2.947898,\ \sigma=0.566620$\\\hline
+Oral Drug Incoming Time & Exponential & $\lambda=0.129199$\\\hline
+IV Drug Incoming Time & Exponential & $\lambda=0.05988024$\\\hline
+\end{tabular}
+\end{center}
+These distributions were chosen based on the computation of the AIC for a number of distributions applied to the data, based on a Cullen and Frey graph. In addition to the Cullen and Frey graph, I also have histograms of the data sets for fit verification.\\\\
+In regards to the second milestone, I have had some success at the implementation, though my simulation is not fully running due to an issue with the compiler that took me several days to resolve. As it stands, I am currently finishing implementing the random choice logic for the idle workers to choose a new task if any are available. I expect that I will have this working by the beginning of next week, so with any luck my timeline itself will not change by too much.\\
+This being said, I have run a few benchmarks on my program, and it runs quite quickly as is. I am able to run six million steps of simulation in under 30 seconds, which is dramatically more than the 12 hour simulation will require. This is good news for the analysis of the confidence intervals, as I will be able to acquire more data points to increase the accuracy of the calculations.\\\\
+As it stands, we have communicated several times regarding my questions on the implementation, so I do not have any new questions for the time being in this category. I do however have a question regarding the base simulation confidence intervals. Have you implemented the model, or do you have an estimation of what the intervals should be? I only ask because I was hoping you could tell me if my intervals were in the correct ballpark, so that I do not base the entire analysis on a faulty model implementation.\\\\
+I am hoping that my timeline through the next status report should remain the same, with both the base case and the optimizations at least mostly implemented and data collected. I am sure that I will be in email contact with you throughout with any questions that arise, so I should be able to remain on track with the timeline in this regard as well.
+\end{document}
