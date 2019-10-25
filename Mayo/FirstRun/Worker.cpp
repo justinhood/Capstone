@@ -50,7 +50,7 @@
 		currentScript=s;
 	}
 	void Worker::updateWorkTime(double t){
-		workTime += t;
+		workTime -= t;
 	}
 	double Worker::getWorkTime(){
 		return workTime;

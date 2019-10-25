@@ -33,7 +33,8 @@ class Script{
 		void setWaitTime(double t);
 		bool getInQueue();
 		void setInQueue(bool b);
-
+		int getOrderNum();
+		void setOrderNum(int i);
 
 	private:
 		//gimme the deets
@@ -46,5 +47,6 @@ class Script{
 		double totalTime;
 		double waitTime;
 		bool inQueue;
+		int orderNumber;
 };
 

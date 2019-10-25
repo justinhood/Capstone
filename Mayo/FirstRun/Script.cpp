@@ -81,4 +81,9 @@
 	void Script::setInQueue(bool b){
 		inQueue=b;
 	}
-
+	int Script::getOrderNum(){
+		return orderNumber;
+	}
+	void Script::setOrderNum(int i){
+		orderNumber=i;
+	}
