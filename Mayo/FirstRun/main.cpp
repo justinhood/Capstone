@@ -117,6 +117,21 @@ int main(){
 	//This shuffles the vector for fairness in the simulation.
 	random_shuffle(idleWorkers.begin(), idleWorkers.end());
 	
+
+	//Look at idle times
+	cout << "Active idles" << endl;
+	for(int i=0; i< activeWorkers.size(); i++){
+		cout << "Idle time (s): " << activeWorkers[i].getIdleTime() << endl;
+	}
+	cout << "Idle idles" << endl;
+	for(int i=0; i<idleWorkers.size(); i++){
+		cout << "Idle time (s): " << idleWorkers[i].getIdleTime() << endl;
+	}
+
+
+
+
+
 	//Setup of our time buffers. After this setup, we have the correct times for each stage of the process. When a script is pushed into the initial buffer, it absorbs the relevant times  for its processing so that it can share with the class as it moves from buffer->worker->buffer.
 	oralIncoming = getOralIncoming(hrs);
 	ivIncoming = getIVIncoming(hrs);
@@ -139,6 +154,7 @@ int main(){
 	step=0;
 	Script nextOral = Script(false);
 	Script nextIV = Script(true);
+	Worker t;
 	while(step < nSteps){
 		/*cout << "Oral Head: " << oralIncoming.front() << ", Oral Size: " << oralIncoming.size() << endl;
 		cout << "IV Head: " << ivIncoming.front() << ", IV Size: " << ivIncoming.size() << endl;
@@ -426,10 +442,16 @@ int main(){
 			}
 		}
 		//Move the idle workers over and clean out our active vector
-		for(int i=indexes.size()-1; i>=0; i--){
-			idleWorkers.push_back(activeWorkers[indexes[i]]);
-			activeWorkers.erase(activeWorkers.begin()+indexes[i]);
-		}
+		/*for(int i=activeWorkers.size()-1; i>=0; i--){
+			if(activeWorkers[i].getIdle()){
+				t=activeWorkers[i];
+				idleWorkers.push_back(t);
+				activeWorkers.erase(activeWorkers.begin()+i);
+			}			
+			//t = activeWorkers[indexes[i]];
+			//idleWorkers.push_back(t);
+			//activeWorkers.erase(activeWorkers.begin()+indexes[i]);
+		}*/
 		indexes.clear();
 		//Now that the active tasks have been updated to relevant queues and times for this step, we must assign new tasks.
 		////First we scramble the idle vector for fairness.
@@ -557,9 +579,12 @@ int main(){
 			}
 		}
 		//Move now active Workers to the active Queue and clean out idle vector
-		for(int i=indexes.size()-1; i>= 0; i--){
-			activeWorkers.push_back(idleWorkers[indexes[i]]);
-			idleWorkers.erase(idleWorkers.begin()+indexes[i]);
+		for(int i=idleWorkers.size()-1; i>= 0; i--){
+			if(!idleWorkers[i].getIdle()){
+				t = idleWorkers[i];
+				activeWorkers.push_back(t);
+				idleWorkers.erase(idleWorkers.begin()+i);
+			}
 		}
 		//Finally, add idle time to remaining idle workers.
 		for(int i=0; i<idleWorkers.size(); i++){
@@ -589,8 +614,13 @@ int main(){
 	cout << "Please God" << endl;
 
 	//Look at idle times
+	cout << "Active idles" << endl;
 	for(int i=0; i< activeWorkers.size(); i++){
 		cout << "Idle time (s): " << activeWorkers[i].getIdleTime() << endl;
+	}
+	cout << "Idle idles" << endl;
+	for(int i=0; i<idleWorkers.size(); i++){
+		cout << "Idle time (s): " << idleWorkers[i].getIdleTime() << endl;
 	}
 	chrono::steady_clock::time_point end = chrono::steady_clock::now();
 	std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << std::endl;
