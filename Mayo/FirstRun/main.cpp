@@ -64,7 +64,6 @@ queue<double> getPrepVerTimes(int num);
 queue<double> getDispenseTimes(int num);
 
 int main(){
-	//srand(1);
 	orderNum=1;
 	//Get the user input to the simulation here.
 	int hrs; //Duration of Sim in hours
@@ -379,20 +378,15 @@ int main(){
 		 * finishes the task at hand*/
 		//Check Whole Vector
 		Script transition;
-		vector<int> indexes;
 		for(int i=0; i < activeWorkers.size(); i++){
 			//Check if task will finish
 			if(activeWorkers[i].getWorkTime()-toc <= 0){
-				//Note the index of a newly idled worker
-				indexes.push_back(i);
 				//Push to relevant queue after completion.
 				if(activeWorkers[i].getTask()=="Entry"){
 					//Pull the script
                                         transition = activeWorkers[i].getCurrentScript();
                                         //Make Idle
                                         activeWorkers[i].setIdle(true);
-                                        //Put in Idle Queue
-                                        idleWorkers.push_back(activeWorkers[i]);
                                         //Push Script to ENTRYVER QUEUE
                                         entryVerQ.push(transition);
 				}else if(activeWorkers[i].getTask()=="EntryVer"){
@@ -400,8 +394,6 @@ int main(){
 					transition = activeWorkers[i].getCurrentScript();
 					//Make Idle
 					activeWorkers[i].setIdle(true);
-					//Put in Idle Queue
-					idleWorkers.push_back(activeWorkers[i]);
 					//Push to appropriate fill queue
 					if(transition.getIV()){
 						ivFillQ.push(transition);
@@ -413,8 +405,6 @@ int main(){
 					transition = activeWorkers[i].getCurrentScript();
 					//Make Idle
 					activeWorkers[i].setIdle(true);
-					//Put in Idle Queue
-					idleWorkers.push_back(activeWorkers[i]);
 					//Push to the Verification Queue
 					fillVerQ.push(transition);
 
@@ -423,8 +413,6 @@ int main(){
 					transition = activeWorkers[i].getCurrentScript();
 					//Make Idle
 					activeWorkers[i].setIdle(true);
-					//Put in Idle Queue
-					idleWorkers.push_back(activeWorkers[i]);
 					//Push to disp Queue
 					dispQ.push(transition);
 				}else if(activeWorkers[i].getTask()=="Dispense"){
@@ -432,8 +420,6 @@ int main(){
 					transition = activeWorkers[i].getCurrentScript();
 					//Make Idle
 					activeWorkers[i].setIdle(true);
-					//Put in idle Q
-					idleWorkers.push_back(activeWorkers[i]);
 					//Push to end Q
 					endQ.push(transition);
 				}
@@ -442,17 +428,13 @@ int main(){
 			}
 		}
 		//Move the idle workers over and clean out our active vector
-		/*for(int i=activeWorkers.size()-1; i>=0; i--){
+		for(int i=activeWorkers.size()-1; i>=0; i--){
 			if(activeWorkers[i].getIdle()){
 				t=activeWorkers[i];
 				idleWorkers.push_back(t);
 				activeWorkers.erase(activeWorkers.begin()+i);
 			}			
-			//t = activeWorkers[indexes[i]];
-			//idleWorkers.push_back(t);
-			//activeWorkers.erase(activeWorkers.begin()+indexes[i]);
-		}*/
-		indexes.clear();
+		}
 		//Now that the active tasks have been updated to relevant queues and times for this step, we must assign new tasks.
 		////First we scramble the idle vector for fairness.
 		random_shuffle(idleWorkers.begin(), idleWorkers.end());
@@ -469,7 +451,6 @@ int main(){
 						idleWorkers[i].setWorkTime(ivFillQ.front().getFillTime());
 						idleWorkers[i].setTask("Fill");
 						ivFillQ.pop();
-						indexes.push_back(i);
 					}
 				}else{
 					//Since Theyre not IV, we check the other tech level queues.
@@ -494,21 +475,18 @@ int main(){
 						idleWorkers[i].setWorkTime(entryQ.front().getEntryTime());
 						idleWorkers[i].setTask("Entry");
 						entryQ.pop();
-						indexes.push_back(i);
 					}else if(myVec[i]=="Fill"){
 						idleWorkers[i].setIdle(false);
 						idleWorkers[i].setCurrentScript(oralFillQ.front());
 						idleWorkers[i].setWorkTime(oralFillQ.front().getFillTime());
 						idleWorkers[i].setTask("Fill");
 						oralFillQ.pop();
-						indexes.push_back(i);
 					}else if(myVec[i]=="Dispense"){
 						idleWorkers[i].setIdle(false);
 						idleWorkers[i].setCurrentScript(dispQ.front());
 						idleWorkers[i].setWorkTime(dispQ.front().getDispTime());
 						idleWorkers[i].setTask("Dispense");
 						dispQ.pop();
-						indexes.push_back(i);
 					}else if(myVec[i]=="NONE"){
 						//None are empty, do nothing.
 					}
@@ -543,35 +521,30 @@ int main(){
 					idleWorkers[i].setWorkTime(entryQ.front().getEntryTime());
 					idleWorkers[i].setTask("Entry");
 					entryQ.pop();
-					indexes.push_back(i);
 				}else if(myVec[i]=="EntryVer"){
 					idleWorkers[i].setIdle(false);
 					idleWorkers[i].setCurrentScript(entryVerQ.front());
 					idleWorkers[i].setWorkTime(entryVerQ.front().getEntryVerTime());
 					idleWorkers[i].setTask("EntryVer");
 					entryVerQ.pop();
-					indexes.push_back(i);
 				}else if(myVec[i]=="Fill"){
 					idleWorkers[i].setIdle(false);
 					idleWorkers[i].setCurrentScript(oralFillQ.front());
 					idleWorkers[i].setWorkTime(oralFillQ.front().getFillTime());
 					idleWorkers[i].setTask("Fill");
 					oralFillQ.pop();
-					indexes.push_back(i);
 				}else if(myVec[i]=="FillVer"){
 					idleWorkers[i].setIdle(false);
 					idleWorkers[i].setCurrentScript(fillVerQ.front());
 					idleWorkers[i].setWorkTime(fillVerQ.front().getFillVerTime());
 					idleWorkers[i].setTask("FillVer");
 					fillVerQ.pop();
-					indexes.push_back(i);
 				}else if(myVec[i]=="Dispense"){
 					idleWorkers[i].setIdle(false);
 					idleWorkers[i].setCurrentScript(dispQ.front());
 					idleWorkers[i].setWorkTime(dispQ.front().getDispTime());
 					idleWorkers[i].setTask("Dispense");
 					dispQ.pop();
-					indexes.push_back(i);
 				}else if(myVec[i]=="NONE"){
 					//None are empty, do nothing.
 				}
