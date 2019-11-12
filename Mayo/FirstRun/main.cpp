@@ -468,26 +468,26 @@ int main(){
 					if(myVec.size()==0){
 						myVec.push_back("NONE");
 					}
-					int i = rand()%myVec.size();
-					if(myVec[i]=="Entry"){
+					int myRand = rand()%myVec.size();
+					if(myVec[myRand]=="Entry"){
 						idleWorkers[i].setIdle(false);
 						idleWorkers[i].setCurrentScript(entryQ.front());
 						idleWorkers[i].setWorkTime(entryQ.front().getEntryTime());
 						idleWorkers[i].setTask("Entry");
 						entryQ.pop();
-					}else if(myVec[i]=="Fill"){
+					}else if(myVec[myRand]=="Fill"){
 						idleWorkers[i].setIdle(false);
 						idleWorkers[i].setCurrentScript(oralFillQ.front());
 						idleWorkers[i].setWorkTime(oralFillQ.front().getFillTime());
 						idleWorkers[i].setTask("Fill");
 						oralFillQ.pop();
-					}else if(myVec[i]=="Dispense"){
+					}else if(myVec[myRand]=="Dispense"){
 						idleWorkers[i].setIdle(false);
 						idleWorkers[i].setCurrentScript(dispQ.front());
 						idleWorkers[i].setWorkTime(dispQ.front().getDispTime());
 						idleWorkers[i].setTask("Dispense");
 						dispQ.pop();
-					}else if(myVec[i]=="NONE"){
+					}else if(myVec[myRand]=="NONE"){
 						//None are empty, do nothing.
 					}
 				}
@@ -514,38 +514,38 @@ int main(){
 				if(myVec.size()==0){
 					myVec.push_back("NONE");
 				}
-				int i = rand()%myVec.size();
-				if(myVec[i]=="Entry"){
+				int myRand = rand()%myVec.size();
+				if(myVec[myRand]=="Entry"){
 					idleWorkers[i].setIdle(false);
 					idleWorkers[i].setCurrentScript(entryQ.front());
 					idleWorkers[i].setWorkTime(entryQ.front().getEntryTime());
 					idleWorkers[i].setTask("Entry");
 					entryQ.pop();
-				}else if(myVec[i]=="EntryVer"){
+				}else if(myVec[myRand]=="EntryVer"){
 					idleWorkers[i].setIdle(false);
 					idleWorkers[i].setCurrentScript(entryVerQ.front());
 					idleWorkers[i].setWorkTime(entryVerQ.front().getEntryVerTime());
 					idleWorkers[i].setTask("EntryVer");
 					entryVerQ.pop();
-				}else if(myVec[i]=="Fill"){
+				}else if(myVec[myRand]=="Fill"){
 					idleWorkers[i].setIdle(false);
 					idleWorkers[i].setCurrentScript(oralFillQ.front());
 					idleWorkers[i].setWorkTime(oralFillQ.front().getFillTime());
 					idleWorkers[i].setTask("Fill");
 					oralFillQ.pop();
-				}else if(myVec[i]=="FillVer"){
+				}else if(myVec[myRand]=="FillVer"){
 					idleWorkers[i].setIdle(false);
 					idleWorkers[i].setCurrentScript(fillVerQ.front());
 					idleWorkers[i].setWorkTime(fillVerQ.front().getFillVerTime());
 					idleWorkers[i].setTask("FillVer");
 					fillVerQ.pop();
-				}else if(myVec[i]=="Dispense"){
+				}else if(myVec[myRand]=="Dispense"){
 					idleWorkers[i].setIdle(false);
 					idleWorkers[i].setCurrentScript(dispQ.front());
 					idleWorkers[i].setWorkTime(dispQ.front().getDispTime());
 					idleWorkers[i].setTask("Dispense");
 					dispQ.pop();
-				}else if(myVec[i]=="NONE"){
+				}else if(myVec[myRand]=="NONE"){
 					//None are empty, do nothing.
 				}
 

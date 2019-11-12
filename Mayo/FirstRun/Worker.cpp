@@ -62,5 +62,7 @@
 		return currentTask;
 	}
 	void Worker::setTask(string s){
-		currentTask = s;
+		if(currentTask != s){
+			currentTask = s;
+		}
 	}
