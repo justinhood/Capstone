@@ -147,10 +147,8 @@ int main(){
 		prepVerTimes = getPrepVerTimes(numOrders);
 		dispenseTimes = getDispenseTimes(numOrders);
 		
-		oInOut << oralIncoming.size();
-		oInOut.close();
-		iInOut << ivIncoming.size();
-		iInOut.close();
+		oInOut << oralIncoming.size() << endl;
+		iInOut << ivIncoming.size() << endl;
 
 		cout << "Oral Incoming + IV incoming=" << numOrders << endl;
 		cout << "***************************" << endl;
@@ -630,7 +628,9 @@ int main(){
 	ivFillOut.close();
 	fillVerOut.close();
 	dispOut.close();
-	endOut.close(); 
+	endOut.close();
+	oInOut.close();
+	iInOut.close();
 
 
 	chrono::steady_clock::time_point end = chrono::steady_clock::now();
