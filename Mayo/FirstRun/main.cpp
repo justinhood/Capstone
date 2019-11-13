@@ -106,7 +106,16 @@ int main(){
 	dispOut.open("dispQueueCounts.txt");
 	ofstream endOut;
 	endOut.open("endQueueCounts.txt");
-	
+	ofstream oralFilled;
+	oralFilled.open("oralFilled.txt");
+	ofstream ivFilled;
+	ivFilled.open("ivFilled.txt");
+	ofstream pharmIdle;
+	pharmIdle.open("pharmIdle.txt");
+	ofstream techIdle;
+	techIdle.open("techIdle.txt");
+	ofstream ivTechIdle;
+	ivTechIdle.open("ivTechIdle.txt");	
 	
 	for(int simCount=0; simCount<numSim; simCount++){
 
@@ -601,6 +610,53 @@ int main(){
 		endOut << endl;
 		
 		
+
+		//Lets go through the end Queue to see what kind everything was and note that!
+		int ivCount=0;
+		int oralCount=0;
+		while(!endQ.empty()){
+			if(endQ.front().getIV()){
+				ivCount+=1;
+			}else{
+				oralCount+=1;
+			}
+			endQ.pop();
+		}
+		oralFilled << oralCount << endl;
+		ivFilled << ivCount << endl;
+		
+		//Now lets look at our worker idle Times
+		for(int i=0; i<idleWorkers.size(); i++){
+			if(!idleWorkers[i].getTech()){
+				pharmIdle << idleWorkers[i].getIdleTime() << ",";
+			}else{
+				if(idleWorkers[i].getIV()){
+					ivTechIdle << idleWorkers[i].getIdleTime() << ",";
+				}else{
+					techIdle << idleWorkers[i].getIdleTime() << ",";
+				}
+			}
+		}
+		for(int i=0; i<activeWorkers.size(); i++){
+			if(!activeWorkers[i].getTech()){
+				pharmIdle << activeWorkers[i].getIdleTime() << ",";
+			}else{
+				if(activeWorkers[i].getIV()){
+					ivTechIdle << activeWorkers[i].getIdleTime() << ",";
+				}else{
+					techIdle << activeWorkers[i].getIdleTime() << ",";
+				}
+			}
+		}
+		//Add a new Line to each
+		pharmIdle << endl;
+		techIdle << endl;
+		ivTechIdle << endl;
+
+
+
+
+
 		idleWorkers.clear();
 		activeWorkers.clear();
 
@@ -631,6 +687,11 @@ int main(){
 	endOut.close();
 	oInOut.close();
 	iInOut.close();
+	oralFilled.close();
+	ivFilled.close();
+	pharmIdle.close();
+	techIdle.close();
+	ivTechIdle.close();
 
 
 	chrono::steady_clock::time_point end = chrono::steady_clock::now();
