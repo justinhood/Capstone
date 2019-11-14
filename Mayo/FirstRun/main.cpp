@@ -132,14 +132,14 @@ int main(){
 		
 
 		//Look at idle times
-		cout << "Active idles" << endl;
+		/*cout << "Active idles" << endl;
 		for(int i=0; i< activeWorkers.size(); i++){
 			cout << "Idle time (s): " << activeWorkers[i].getIdleTime() << endl;
 		}
 		cout << "Idle idles" << endl;
 		for(int i=0; i<idleWorkers.size(); i++){
 			cout << "Idle time (s): " << idleWorkers[i].getIdleTime() << endl;
-		}
+		}*/
 
 
 
@@ -159,8 +159,8 @@ int main(){
 		oInOut << oralIncoming.size() << endl;
 		iInOut << ivIncoming.size() << endl;
 
-		cout << "Oral Incoming + IV incoming=" << numOrders << endl;
-		cout << "***************************" << endl;
+		/*cout << "Oral Incoming + IV incoming=" << numOrders << endl;
+		cout << "***************************" << endl;*/
 		//main loop. oh boy
 		step=0;
 		Script nextOral = Script(false);
@@ -588,7 +588,7 @@ int main(){
 			step+=1;
 		}
 		//Now that the logic is a flowin, lets print some test shit. 
-		cout << "endQ size=" << endQ.size() << endl;
+		/*cout << "endQ size=" << endQ.size() << endl;
 		cout << "Please God" << endl;
 	
 		//Look at idle times
@@ -599,7 +599,7 @@ int main(){
 		cout << "Idle idles" << endl;
 		for(int i=0; i<idleWorkers.size(); i++){
 			cout << "Idle time (s): " << idleWorkers[i].getIdleTime() << endl;
-		}				
+		}*/				
 		//Add an extra blank to the data
 		entryOut << endl;
 		entryVerOut << endl;
