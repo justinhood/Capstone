@@ -2,6 +2,8 @@
 *.aux
 *.log
 *.sync*
+*.dvi
+*.pdf
 
 ##C++ garbage
 *.o

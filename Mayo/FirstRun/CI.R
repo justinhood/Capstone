@@ -142,7 +142,7 @@ p <- ggplot(df, aes(x = x, y = C)) +
   geom_point(size = 4) +
   geom_errorbar(aes(ymax = U, ymin = L))
 p + labs(title = "Orders Filled", x = "Order Type", y="Average Filled")
-png("FilledCIs")
+png("FilledCIs.png")
 p <- ggplot(df, aes(x = x, y = C)) +
   geom_point(size = 4) +
   geom_errorbar(aes(ymax = U, ymin = L))
