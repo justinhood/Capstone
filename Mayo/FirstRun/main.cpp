@@ -116,7 +116,14 @@ int main(){
 	techIdle.open("techIdle.txt");
 	ofstream ivTechIdle;
 	ivTechIdle.open("ivTechIdle.txt");	
-	
+	ofstream oralTotals;
+	oralTotals.open("oralTotals.txt");
+	ofstream ivTotals;
+	ivTotals.open("ivTotals.txt");
+
+
+
+
 	for(int simCount=0; simCount<numSim; simCount++){
 
 		//Setup workers. For base case we have n pharmacists, and m techs with only one tech being an IV designated worker. Workers start in the Idle case, as no products are in the queues yet. Upon the arrival of the first script to the entry Q, the first worker in the shuffled vector will get a chance to do it.
@@ -174,6 +181,8 @@ int main(){
 			if(oralIncoming.size() > 0 && ivIncoming.size() > 0){
 				//First Case, oral enters, but iv does not.
 				if(oralIncoming.front()-toc <=0 && ivIncoming.front()-toc >0){
+					//Start the total timer.
+					nextOral.setTotalTime(step);
 					//Entry Time
 					nextOral.setEntryTime(entryTimes.front());
 					entryTimes.pop();
@@ -201,6 +210,8 @@ int main(){
 					ivIncoming.front()-=toc;
 					oralIncoming.pop();
 				}else if(oralIncoming.front()-toc >0 && ivIncoming.front()-toc <= 0){
+					//Start the total timer.
+					nextIV.setTotalTime(step);
 					//Entry Time
 					nextIV.setEntryTime(entryTimes.front());
 					entryTimes.pop();
@@ -230,6 +241,8 @@ int main(){
 					//Case where oral is first, prioritize oral on tie(if possible)
 					if(oralIncoming.front()-toc >= ivIncoming.front()){
 						//OralTYME
+						//Start the total timer.
+						nextOral.setTotalTime(step);
 						//Entry Time
 						nextOral.setEntryTime(entryTimes.front());
 						entryTimes.pop();
@@ -255,6 +268,8 @@ int main(){
 						oralIncoming.pop();
 
 						//IVTYME
+						//Start the total timer.
+						nextIV.setTotalTime(step);
 						//Entry Time
 						nextIV.setEntryTime(entryTimes.front());
 						entryTimes.pop();
@@ -281,6 +296,8 @@ int main(){
 
 					}else{
 						//IVTYME
+						//Start the total timer.
+						nextIV.setTotalTime(step);
 						//Entry Time
 						nextIV.setEntryTime(entryTimes.front());
 						entryTimes.pop();
@@ -306,6 +323,8 @@ int main(){
 						ivIncoming.pop();
 
 						//OralTYME
+						//Start the total timer.
+						nextOral.setTotalTime(step);
 						//Entry Time
 						nextOral.setEntryTime(entryTimes.front());
 						entryTimes.pop();
@@ -336,6 +355,8 @@ int main(){
 				}
 			} else if(oralIncoming.size() > 0 && ivIncoming.size() == 0){
 				////If iv is empty, the show must go on.
+				//Start the total timer.
+				nextOral.setTotalTime(step);
 				//Entry Time
 				nextOral.setEntryTime(entryTimes.front());
 				entryTimes.pop();
@@ -362,6 +383,8 @@ int main(){
 			}else if(oralIncoming.size() == 0 && ivIncoming.size() > 0){
 				////Fringe case
 				//IVTYME
+				//Start the total timer.
+				nextIV.setTotalTime(step);
 				//Entry Time
 				nextIV.setEntryTime(entryTimes.front());
 				entryTimes.pop();
@@ -430,6 +453,7 @@ int main(){
 					}else if(activeWorkers[i].getTask()=="Dispense"){
 						//Pull the Script
 						transition = activeWorkers[i].getCurrentScript();
+						transition.updateTotalTime(step);
 						//Make Idle
 						activeWorkers[i].setIdle(true);
 						//Push to end Q
@@ -617,14 +641,18 @@ int main(){
 		while(!endQ.empty()){
 			if(endQ.front().getIV()){
 				ivCount+=1;
+				ivTotals << endQ.front().getTotalTime() << ",";
 			}else{
 				oralCount+=1;
+				oralTotals << endQ.front().getTotalTime() << ",";
 			}
 			endQ.pop();
 		}
 		oralFilled << oralCount << endl;
 		ivFilled << ivCount << endl;
-		
+		ivTotals << endl;
+	        oralTotals << endl;
+
 		//Now lets look at our worker idle Times
 		for(int i=0; i<idleWorkers.size(); i++){
 			if(!idleWorkers[i].getTech()){
@@ -692,7 +720,8 @@ int main(){
 	pharmIdle.close();
 	techIdle.close();
 	ivTechIdle.close();
-
+	oralTotals.close();
+	ivTotals.close();
 
 	chrono::steady_clock::time_point end = chrono::steady_clock::now();
 	std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << std::endl;

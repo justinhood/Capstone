@@ -87,3 +87,12 @@
 	void Script::setOrderNum(int i){
 		orderNumber=i;
 	}
+	double Script::getTotalTime(){
+		return totalTime;
+	}
+	void Script::setTotalTime(double d){
+		totalTime=d;
+	}
+	void Script::updateTotalTime(double d){
+		totalTime=d-totalTime;
+	}

@@ -35,6 +35,9 @@ class Script{
 		void setInQueue(bool b);
 		int getOrderNum();
 		void setOrderNum(int i);
+		double getTotalTime();
+		void setTotalTime(double d);
+		void updateTotalTime(double d);
 
 	private:
 		//gimme the deets

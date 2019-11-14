@@ -140,3 +140,29 @@ s=sd(ivTechIdle)/duration*100
 delta <- zstar*s/sqrt(length(ivTechIdle))
 (lowerIVTechIdle<- mu-delta)
 (upperIVTechIdle<- mu+delta)
+
+### Oral Throughput Times
+no_col <- max(count.fields("oralTotals.txt", sep = ","))
+X <- read.table("oralTotals.txt" ,sep=",",fill=TRUE,header = F,col.names=c("chr", "start", "end", "length",1:no_col))
+X <- t(X)
+oralThrough <- colMeans(X, na.rm=TRUE)
+#Convert from steps to minutes
+oralThrough <- oralThrough*toc
+mu=mean(oralThrough)
+s=sd(oralThrough)
+delta <- zstar*s/sqrt(length(oralThrough))
+(lowerOralThrough<- mu-delta)
+(upperOralThrough<- mu+delta)
+
+### IV Throughput Times
+no_col <- max(count.fields("ivTotals.txt", sep = ","))
+X <- read.table("ivTotals.txt" ,sep=",",fill=TRUE,header = F,col.names=c("chr", "start", "end", "length",1:no_col))
+X <- t(X)
+ivThrough <- colMeans(X, na.rm=TRUE)
+#Convert from steps to minutes
+ivThrough <- ivThrough*toc
+mu=mean(ivThrough)
+s=sd(ivThrough)
+delta <- zstar*s/sqrt(length(ivThrough))
+(lowerIVThrough<- mu-delta)
+(upperIVThrough<- mu+delta)
