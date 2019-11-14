@@ -2,6 +2,7 @@ setwd("~/Desktop/PSM/Fall 2019/Capstone/Mayo/FirstRun")
 rm(list = ls())
 zstar <- qnorm(.975)
 duration <- 12*60
+toc <- 0.25
 
 ##### Oral Incoming Stats
 X <- read.csv("OralIncomingCounts.txt", header = FALSE)
@@ -20,6 +21,21 @@ s=sd(ivIn)
 delta <- zstar*s/sqrt(length(ivIn))
 (lowerIVIn<- mu-delta)
 (upperIVIn<- mu+delta)
+
+
+### Incoming intervals:
+df <- data.frame(x=c("Oral Incoming", "IV Incoming"), L=c(lowerOralIn,lowerIVIn), C=c(mean(oralIn), mean(ivIn)), U=c(upperOralIn, upperIVIn))
+p <- ggplot(df, aes(x = x, y = C)) +
+  geom_point(size = 4) +
+  geom_errorbar(aes(ymax = U, ymin = L))
+p + labs(title = "Incoming Drug Orders", x = "Drug Type", y="Number of Orders")
+png("IncomingCIs.png")
+p <- ggplot(df, aes(x = x, y = C)) +
+  geom_point(size = 4) +
+  geom_errorbar(aes(ymax = U, ymin = L))
+p + labs(title = "Incoming Drug Orders", x = "Drug Type", y="Number of Orders")
+dev.off()
+
 
 ##### Entry Queue Lengths
 X <- read.csv("entryQueueCounts.txt", header = FALSE)
@@ -87,6 +103,21 @@ delta <- zstar*s/sqrt(length(dispQ))
 (lowerDispQ<- mu-delta)
 (upperDispQ<- mu+delta)
 
+
+### Queue Length intervals:
+df <- data.frame(x=c("Entry", "Entry Verification", "Oral Fill", "IV Fill", "Fill Verification", "Dispense"), L=c(lowerEntryQ,lowerEntryVerQ, lowerOralFillQ, lowerIVFillQ, lowerFillVerQ, lowerDispQ), C=c(mean(entryQ), mean(entryVerQ), mean(oralFillQ), mean(ivFillQ),mean(fillVerQ), mean(dispQ)), U=c(upperEntryQ, upperEntryVerQ, upperOralFillQ, upperIVFillQ, upperFillVerQ, upperDispQ))
+p <- ggplot(df, aes(x = x, y = C)) +
+  geom_point(size = 4) +
+  geom_errorbar(aes(ymax = U, ymin = L))
+p + labs(title = "Average Queue Length", x = "Queue", y="Average Length")
+png("QueueCIs.png")
+p <- ggplot(df, aes(x = x, y = C)) +
+  geom_point(size = 4) +
+  geom_errorbar(aes(ymax = U, ymin = L))
+p + labs(title = "Average Queue Length", x = "Queue", y="Average Length")
+dev.off()
+
+
 #### Oral Filled Stats
 X <- read.csv("oralFilled.txt", header = FALSE)
 oralOut <- X[,1]
@@ -105,14 +136,30 @@ delta <- zstar*s/sqrt(length(ivOut))
 (lowerIVOut<- mu-delta)
 (upperIVOut<- mu+delta)
 
+### Filled intervals:
+df <- data.frame(x=c("Oral", "IV"), L=c(lowerOralOut,lowerIVOut), C=c(mean(oralOut), mean(ivOut)), U=c(upperOralOut, upperIVOut))
+p <- ggplot(df, aes(x = x, y = C)) +
+  geom_point(size = 4) +
+  geom_errorbar(aes(ymax = U, ymin = L))
+p + labs(title = "Orders Filled", x = "Order Type", y="Average Filled")
+png("FilledCIs")
+p <- ggplot(df, aes(x = x, y = C)) +
+  geom_point(size = 4) +
+  geom_errorbar(aes(ymax = U, ymin = L))
+p + labs(title = "Orders Filled", x = "Order Type", y="Average Filled")
+dev.off()
+
+
+
 #### Pharmacist Idle Times
 X <- read.csv("pharmIdle.txt", header = FALSE)
 X <- t(X)
 X<-X[-dim(X)[1],]
 pharmIdle <- colMeans(X)
+pharmIdle <- pharmIdle/duration*100
 # These will be percentages right now, can remove if desired
-mu=mean(pharmIdle)/duration*100
-s=sd(pharmIdle)/duration*100
+mu=mean(pharmIdle)#/duration*100
+s=sd(pharmIdle)#/duration*100
 delta <- zstar*s/sqrt(length(pharmIdle))
 (lowerPharmIdle<- mu-delta)
 (upperPharmIdle<- mu+delta)
@@ -122,24 +169,41 @@ X <- read.csv("techIdle.txt", header = FALSE)
 X <- t(X)
 X<-X[-dim(X)[1],]
 techIdle <- colMeans(X)
+techIdle <- techIdle/duration*100
 # These will be percentages right now, can remove if desired
-mu=mean(techIdle)/duration*100
-s=sd(techIdle)/duration*100
+mu=mean(techIdle)#/duration*100
+s=sd(techIdle)#/duration*100
 delta <- zstar*s/sqrt(length(techIdle))
 (lowerTechIdle<- mu-delta)
 (upperTechIdle<- mu+delta)
 
-## Normal Technician Idle Times
+## IV Technician Idle Times
 X <- read.csv("ivTechIdle.txt", header = FALSE)
 X <- t(X)
 X<-X[-dim(X)[1],]
 ivTechIdle <- X
+ivTechIdle <- ivTechIdle/duration*100
 # These will be percentages right now, can remove if desired
-mu=mean(ivTechIdle)/duration*100
-s=sd(ivTechIdle)/duration*100
+mu=mean(ivTechIdle)#/duration*100
+s=sd(ivTechIdle)#/duration*100
 delta <- zstar*s/sqrt(length(ivTechIdle))
 (lowerIVTechIdle<- mu-delta)
 (upperIVTechIdle<- mu+delta)
+
+
+### Idle intervals:
+df <- data.frame(x=c("Pharmacist", "Technician", "IV Technician"), L=c(lowerPharmIdle,lowerTechIdle,lowerIVTechIdle), C=c(mean(pharmIdle), mean(techIdle), mean(ivTechIdle)), U=c(upperPharmIdle, upperTechIdle, upperIVTechIdle))
+p <- ggplot(df, aes(x = x, y = C)) +
+  geom_point(size = 4) +
+  geom_errorbar(aes(ymax = U, ymin = L))
+p + labs(title = "Employee Idle Times", x = "Employee Type", y="Percent Idle")
+png("IdleCIs.png")
+p <- ggplot(df, aes(x = x, y = C)) +
+  geom_point(size = 4) +
+  geom_errorbar(aes(ymax = U, ymin = L))
+p + labs(title = "Employee Idle Times", x = "Employee Type", y="Percent Idle")
+dev.off()
+
 
 ### Oral Throughput Times
 no_col <- max(count.fields("oralTotals.txt", sep = ","))
@@ -166,3 +230,18 @@ s=sd(ivThrough)
 delta <- zstar*s/sqrt(length(ivThrough))
 (lowerIVThrough<- mu-delta)
 (upperIVThrough<- mu+delta)
+
+
+### Throughput Intervals
+### Idle intervals:
+df <- data.frame(x=c("Oral", "IV"), L=c(lowerOralThrough,lowerIVThrough), C=c(mean(oralThrough), mean(ivThrough)), U=c(upperOralThrough, upperIVThrough))
+p <- ggplot(df, aes(x = x, y = C)) +
+  geom_point(size = 4) +
+  geom_errorbar(aes(ymax = U, ymin = L))
+p + labs(title = "Order Throughput Times", x = "Order Type", y="Time (min)")
+png("ThroughputCIs.png")
+p <- ggplot(df, aes(x = x, y = C)) +
+  geom_point(size = 4) +
+  geom_errorbar(aes(ymax = U, ymin = L))
+p + labs(title = "Order Throughput Times", x = "Order Type", y="Time (min)")
+dev.off()

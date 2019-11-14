@@ -7,3 +7,6 @@
 *.o
 *.exe
 *.txt
+
+## R garbage
+*.png
