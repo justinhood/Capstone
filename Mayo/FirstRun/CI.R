@@ -3,7 +3,7 @@ rm(list = ls())
 zstar <- qnorm(.975)
 duration <- 12*60
 toc <- 0.25
-
+library(ggplot2)
 ##### Oral Incoming Stats
 X <- read.csv("OralIncomingCounts.txt", header = FALSE)
 oralIn <- X[,1]

@@ -28,8 +28,8 @@ class Worker{
 		void updateWorkTime(double t);
 		double getWorkTime();
 		void setWorkTime(double t);
-		string getTask();
-		void setTask(string s);
+		int getTask();
+		void setTask(int s);
 
 
 
@@ -41,5 +41,5 @@ class Worker{
 		double workTime;
 		//vector<bool> idleChecks;
 		Script currentScript;
-		string currentTask;
+		int currentTask;
 };

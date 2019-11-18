@@ -417,14 +417,14 @@ int main(){
 				//Check if task will finish
 				if(activeWorkers[i].getWorkTime()-toc <= 0){
 					//Push to relevant queue after completion.
-					if(activeWorkers[i].getTask()=="Entry"){
+					if(activeWorkers[i].getTask()==1){
 						//Pull the script
 						transition = activeWorkers[i].getCurrentScript();
 						//Make Idle
 						activeWorkers[i].setIdle(true);
 						//Push Script to ENTRYVER QUEUE
 						entryVerQ.push(transition);
-					}else if(activeWorkers[i].getTask()=="EntryVer"){
+					}else if(activeWorkers[i].getTask()==2){
 						//Pull the script
 						transition = activeWorkers[i].getCurrentScript();
 						//Make Idle
@@ -435,7 +435,7 @@ int main(){
 						}else{
 							oralFillQ.push(transition);
 						}
-					}else if(activeWorkers[i].getTask()=="Fill"){
+					}else if(activeWorkers[i].getTask()==3 || activeWorkers[i].getTask()==6){
 						//Pull the Script
 						transition = activeWorkers[i].getCurrentScript();
 						//Make Idle
@@ -443,14 +443,14 @@ int main(){
 						//Push to the Verification Queue
 						fillVerQ.push(transition);
 
-					}else if(activeWorkers[i].getTask()=="FillVer"){
+					}else if(activeWorkers[i].getTask()==4){
 						//Pull the Script
 						transition = activeWorkers[i].getCurrentScript();
 						//Make Idle
 						activeWorkers[i].setIdle(true);
 						//Push to disp Queue
 						dispQ.push(transition);
-					}else if(activeWorkers[i].getTask()=="Dispense"){
+					}else if(activeWorkers[i].getTask()==5){
 						//Pull the Script
 						transition = activeWorkers[i].getCurrentScript();
 						transition.updateTotalTime(step);
@@ -485,7 +485,7 @@ int main(){
 							idleWorkers[i].setIdle(false);
 							idleWorkers[i].setCurrentScript(ivFillQ.front());
 							idleWorkers[i].setWorkTime(ivFillQ.front().getFillTime());
-							idleWorkers[i].setTask("Fill");
+							idleWorkers[i].setTask(6);
 							ivFillQ.pop();
 						}
 					}else{
@@ -509,19 +509,19 @@ int main(){
 							idleWorkers[i].setIdle(false);
 							idleWorkers[i].setCurrentScript(entryQ.front());
 							idleWorkers[i].setWorkTime(entryQ.front().getEntryTime());
-							idleWorkers[i].setTask("Entry");
+							idleWorkers[i].setTask(1);
 							entryQ.pop();
 						}else if(myVec[myRand]=="Fill"){
 							idleWorkers[i].setIdle(false);
 							idleWorkers[i].setCurrentScript(oralFillQ.front());
 							idleWorkers[i].setWorkTime(oralFillQ.front().getFillTime());
-							idleWorkers[i].setTask("Fill");
+							idleWorkers[i].setTask(3);
 							oralFillQ.pop();
 						}else if(myVec[myRand]=="Dispense"){
 							idleWorkers[i].setIdle(false);
 							idleWorkers[i].setCurrentScript(dispQ.front());
 							idleWorkers[i].setWorkTime(dispQ.front().getDispTime());
-							idleWorkers[i].setTask("Dispense");
+							idleWorkers[i].setTask(5);
 							dispQ.pop();
 						}else if(myVec[myRand]=="NONE"){
 							//None are empty, do nothing.
@@ -555,31 +555,31 @@ int main(){
 						idleWorkers[i].setIdle(false);
 						idleWorkers[i].setCurrentScript(entryQ.front());
 						idleWorkers[i].setWorkTime(entryQ.front().getEntryTime());
-						idleWorkers[i].setTask("Entry");
+						idleWorkers[i].setTask(1);
 						entryQ.pop();
 					}else if(myVec[myRand]=="EntryVer"){
 						idleWorkers[i].setIdle(false);
 						idleWorkers[i].setCurrentScript(entryVerQ.front());
 						idleWorkers[i].setWorkTime(entryVerQ.front().getEntryVerTime());
-						idleWorkers[i].setTask("EntryVer");
+						idleWorkers[i].setTask(2);
 						entryVerQ.pop();
 					}else if(myVec[myRand]=="Fill"){
 						idleWorkers[i].setIdle(false);
 						idleWorkers[i].setCurrentScript(oralFillQ.front());
 						idleWorkers[i].setWorkTime(oralFillQ.front().getFillTime());
-						idleWorkers[i].setTask("Fill");
+						idleWorkers[i].setTask(3);
 						oralFillQ.pop();
 					}else if(myVec[myRand]=="FillVer"){
 						idleWorkers[i].setIdle(false);
 						idleWorkers[i].setCurrentScript(fillVerQ.front());
 						idleWorkers[i].setWorkTime(fillVerQ.front().getFillVerTime());
-						idleWorkers[i].setTask("FillVer");
+						idleWorkers[i].setTask(4);
 						fillVerQ.pop();
 					}else if(myVec[myRand]=="Dispense"){
 						idleWorkers[i].setIdle(false);
 						idleWorkers[i].setCurrentScript(dispQ.front());
 						idleWorkers[i].setWorkTime(dispQ.front().getDispTime());
-						idleWorkers[i].setTask("Dispense");
+						idleWorkers[i].setTask(5);
 						dispQ.pop();
 					}else if(myVec[myRand]=="NONE"){
 						//None are empty, do nothing.

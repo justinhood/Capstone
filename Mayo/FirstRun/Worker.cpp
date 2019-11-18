@@ -58,11 +58,9 @@
 	void Worker::setWorkTime(double t){
 		workTime=t;
 	}
-	string Worker::getTask(){
+	int Worker::getTask(){
 		return currentTask;
 	}
-	void Worker::setTask(string s){
-		if(currentTask != s){
-			currentTask = s;
-		}
+	void Worker::setTask(int s){
+		currentTask=s;
 	}
