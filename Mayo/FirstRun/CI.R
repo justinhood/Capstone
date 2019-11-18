@@ -3,6 +3,7 @@ rm(list = ls())
 zstar <- qnorm(.975)
 duration <- 12*60
 toc <- 0.25
+require(ggplot2)
 library(ggplot2)
 ##### Oral Incoming Stats
 X <- read.csv("OralIncomingCounts.txt", header = FALSE)
@@ -25,10 +26,9 @@ delta <- zstar*s/sqrt(length(ivIn))
 
 ### Incoming intervals:
 df <- data.frame(x=c("Oral Incoming", "IV Incoming"), L=c(lowerOralIn,lowerIVIn), C=c(mean(oralIn), mean(ivIn)), U=c(upperOralIn, upperIVIn))
-p <- ggplot(df, aes(x = x, y = C)) +
+ggplot(df, aes(x = x, y = C)) +
   geom_point(size = 4) +
-  geom_errorbar(aes(ymax = U, ymin = L))
-p + labs(title = "Incoming Drug Orders", x = "Drug Type", y="Number of Orders")
+  geom_errorbar(aes(ymax = U, ymin = L)) + labs(title = "Incoming Drug Orders", x = "Drug Type", y="Number of Orders")
 png("IncomingCIs.png")
 p <- ggplot(df, aes(x = x, y = C)) +
   geom_point(size = 4) +
@@ -245,3 +245,26 @@ p <- ggplot(df, aes(x = x, y = C)) +
   geom_errorbar(aes(ymax = U, ymin = L))
 p + labs(title = "Order Throughput Times", x = "Order Type", y="Time (min)")
 dev.off()
+
+
+### Oral Wait Times
+no_col <- max(count.fields("oralWaitTimes.txt", sep = ","))
+X <- read.table("oralWaitTimes.txt" ,sep=",",fill=TRUE,header = F,col.names=c("chr", "start", "end", "length",1:no_col))
+X <- t(X)
+oralWait <- oralThrough - colMeans(X, na.rm=TRUE)
+mu=mean(oralWait)
+s=sd(oralWait)
+delta <- zstar*s/sqrt(length(oralWait))
+(lowerOralWait<- mu-delta)
+(upperOralWait<- mu+delta)
+
+### IV Throughput Times
+no_col <- max(count.fields("ivWaitTimes.txt", sep = ","))
+X <- read.table("ivWaitTimes.txt" ,sep=",",fill=TRUE,header = F,col.names=c("chr", "start", "end", "length",1:no_col))
+X <- t(X)
+ivWait <- ivThrough - colMeans(X, na.rm=TRUE)
+mu=mean(ivWait)
+s=sd(ivWait)
+delta <- zstar*s/sqrt(length(ivWait))
+(lowerIVWait<- mu-delta)
+(upperIVWait<- mu+delta)

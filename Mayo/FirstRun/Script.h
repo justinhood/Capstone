@@ -38,7 +38,8 @@ class Script{
 		double getTotalTime();
 		void setTotalTime(double d);
 		void updateTotalTime(double d);
-
+		double getRunTime();
+		void calcRunTime();
 	private:
 		//gimme the deets
 		bool isIV;
@@ -51,5 +52,6 @@ class Script{
 		double waitTime;
 		bool inQueue;
 		int orderNumber;
+		double runTime;
 };
 

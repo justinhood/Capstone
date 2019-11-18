@@ -120,7 +120,10 @@ int main(){
 	oralTotals.open("oralTotals.txt");
 	ofstream ivTotals;
 	ivTotals.open("ivTotals.txt");
-
+	ofstream oralWait;
+	oralWait.open("oralWaitTimes.txt");
+	ofstream ivWait;
+	ivWait.open("ivWaitTimes.txt");
 
 
 
@@ -639,12 +642,16 @@ int main(){
 		int ivCount=0;
 		int oralCount=0;
 		while(!endQ.empty()){
+			endQ.front().calcRunTime();
+			//cout << endQ.front().getRunTime() << endl;
 			if(endQ.front().getIV()){
 				ivCount+=1;
 				ivTotals << endQ.front().getTotalTime() << ",";
+				ivWait << endQ.front().getRunTime() << ",";
 			}else{
 				oralCount+=1;
 				oralTotals << endQ.front().getTotalTime() << ",";
+				oralWait << endQ.front().getRunTime() << ",";
 			}
 			endQ.pop();
 		}
@@ -652,6 +659,8 @@ int main(){
 		ivFilled << ivCount << endl;
 		ivTotals << endl;
 	        oralTotals << endl;
+		ivWait << endl;
+		oralWait << endl;
 
 		//Now lets look at our worker idle Times
 		for(int i=0; i<idleWorkers.size(); i++){
@@ -722,6 +731,8 @@ int main(){
 	ivTechIdle.close();
 	oralTotals.close();
 	ivTotals.close();
+	oralWait.close();
+	ivWait.close();
 
 	chrono::steady_clock::time_point end = chrono::steady_clock::now();
 	std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << std::endl;

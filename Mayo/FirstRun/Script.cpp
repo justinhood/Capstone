@@ -96,3 +96,9 @@
 	void Script::updateTotalTime(double d){
 		totalTime=d-totalTime;
 	}
+	double Script::getRunTime(){
+		return runTime;
+	}
+	void Script::calcRunTime(){
+		runTime=entryTime+entryVerTime+fillTime+fillVerTime+dispTime;
+	}
