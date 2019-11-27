@@ -533,23 +533,26 @@ int main(){
 
 				} else{
 					//These are pharmacists.
+					//For the pharm ver test, the pharmacists will only look at the verification tasks, ignoring the tech level queues.
+					
+					
 					vector<string> myVec;
 					queue<Script> choice;
-					if(entryQ.size()>0){
+					/*if(entryQ.size()>0){
 						myVec.push_back("Entry");
-					}
+					}*/
 					if(entryVerQ.size()>0){
 						myVec.push_back("EntryVer");
 					}
-					if(oralFillQ.size()>0){
+					/*if(oralFillQ.size()>0){
 						myVec.push_back("Fill");
-					}
+					}*/
 					if(fillVerQ.size()>0){
 						myVec.push_back("FillVer");
 					}
-					if(dispQ.size()>0){
+					/*if(dispQ.size()>0){
 						myVec.push_back("Dispense");
-					}
+					}*/
 					if(myVec.size()==0){
 						myVec.push_back("NONE");
 					}

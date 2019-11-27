@@ -1,4 +1,5 @@
-setwd("~/Desktop/PSM/Fall 2019/Capstone/Mayo/FirstRun")
+#setwd("~/Desktop/PSM/Fall 2019/Capstone/Mayo/PharmVer/data")
+setwd("~/Desktop/Capstone/Mayo/PharmVer/data")
 rm(list = ls())
 zstar <- qnorm(.975)
 duration <- 12*60
@@ -258,7 +259,7 @@ delta <- zstar*s/sqrt(length(oralWait))
 (lowerOralWait<- mu-delta)
 (upperOralWait<- mu+delta)
 
-### IV Throughput Times
+### IV Wait Times
 no_col <- max(count.fields("ivWaitTimes.txt", sep = ","))
 X <- read.table("ivWaitTimes.txt" ,sep=",",fill=TRUE,header = F,col.names=c("chr", "start", "end", "length",1:no_col))
 X <- t(X)
