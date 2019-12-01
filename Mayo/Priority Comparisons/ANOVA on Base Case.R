@@ -1,4 +1,5 @@
-setwd("~/Desktop/Capstone/Mayo/Priority Comparisons")
+setwd("~/Desktop/PSM/Fall 2019/Capstone/Mayo/Priority Comparisons")
+#setwd("~/Desktop/Capstone/Mayo/Priority Comparisons")
 rm(list = ls())
 
 ## Get My Data for Oral Filled
@@ -40,9 +41,20 @@ group_by(anovaDat, Treatment) %>%
     mean = mean(OralThroughput, na.rm = TRUE),
     sd = sd(OralThroughput, na.rm = TRUE)
   )
-
 library(ggplot2)
-ggboxplot(my_data, x = "Treatment", y = "OralThroughput", 
-          color = "Treatment", palette = c("#00AFBB", "#E7B800", "#FC4E07",  "#55FF00" ),
-          order = c("base", "prof", "max", "smart"),
-          ylab = "Throughput", xlab = "Treatment")
+library(viridis)
+# Basic box plot
+p <- ggplot(anovaDat, aes(x=Treatment, y=OralThroughput, color=Treatment)) + 
+  geom_boxplot()
+p + scale_color_viridis(discrete = TRUE, option="D")
+
+oral.aov <- aov(OralThroughput~Treatment, data=anovaDat)
+summary(oral.aov)
+TukeyHSD(oral.aov)
+pairwise.t.test(anovaDat$OralThroughput, anovaDat$Treatment,
+                p.adjust.method = "BH", pool.sd = FALSE)
+
+# Extract the residuals
+aov_residuals <- residuals(object = oral.aov )
+# Run Shapiro-Wilk test
+shapiro.test(x = aov_residuals )

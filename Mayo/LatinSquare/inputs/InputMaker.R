@@ -1,0 +1,26 @@
+setwd("~/Desktop/PSM/Fall 2019/Capstone/Mayo/LatinSquare/inputs")
+rm(list = ls())
+set.seed(420)
+oralIncomingTimes <- rexp(1, rate=.129199)
+while(sum(oralIncomingTimes) < 720){
+  oralIncomingTimes <- c(oralIncomingTimes, rexp(1, rate=.129199))
+}
+ivIncomingTimes <- rexp(1, rate=.05988024)
+while(sum(ivIncomingTimes) < 720){
+  ivIncomingTimes <- c(ivIncomingTimes, rexp(1, rate=.05988024))
+}
+n <- length(oralIncomingTimes)+length(ivIncomingTimes)
+entryTimes <- rnorm(n,9.873784,2.095579)
+entryVerTimes <-runif(n,1.2726,3.4059)
+oralPrepTimes <- rlnorm(length(oralIncomingTimes),2.99140489,.06300657)
+ivPrepTimes <- rweibull(length(ivIncomingTimes),2.362195,6.359247)
+prepVerTimes <- rweibull(n,2.911269,2.143830)
+dispTimes <- rnorm(n,2.947898,.566620)
+write.table(oralIncomingTimes, "oralIn.txt", row.names = FALSE, col.names = FALSE)
+write.table(ivIncomingTimes, "ivIn.txt", row.names = FALSE, col.names = FALSE)
+write.table(entryTimes, "entry.txt", row.names = FALSE, col.names = FALSE)
+write.table(entryVerTimes, "entryver.txt", row.names = FALSE, col.names = FALSE)
+write.table(oralPrepTimes, "oralprep.txt", row.names = FALSE, col.names = FALSE)
+write.table(ivPrepTimes, "ivprep.txt", row.names = FALSE, col.names = FALSE)
+write.table(prepVerTimes, "prepver.txt", row.names = FALSE, col.names = FALSE)
+write.table(dispTimes, "disp.txt", row.names = FALSE, col.names = FALSE)
