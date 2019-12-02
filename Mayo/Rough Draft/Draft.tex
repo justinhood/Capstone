@@ -28,9 +28,46 @@ MSCS 791}              %   for the title page.
 \section*{Introduction}                % Print a "chapter" heading\
 \addcontentsline{toc}{section}{Introduction}
 \pagenumbering{arabic}                  % Start text with arabic 1
-In this case study, we are tasked with both modeling and optimizing the workflow for a pharmacy based on data regarding task length and frequency. 
-%\section*{Methods}
-%\addcontentsline{toc}{section}{Methods}
+In this case study, we are tasked with both modeling and optimizing the workflow for a pharmacy based on a sample of data regarding task duration and incoming order frequency. In addition to the sample data for the pharmacy, we are also given a brief overview of the basic workflow for the pharmacy. Using this information, we shall begin by constructing a discrete event simulation in c++ to test our so called ``control" case, i.e. the pharmacy described by the basic information. Once this simulation is running and tested, we shall attack the optimization on two fronts.
+\begin{enumerate}
+\item Optimizing task priority within the workflow (Picking the best queue to pull from)
+\item Optimizing staff breakdown (Best number of pharmacists vs. technicians to employ)
+\end{enumerate}
+\section*{Methods}
+\addcontentsline{toc}{section}{Methods}
+In order to effectively model and optimize the workflow in this pharmacy, we 
+
+\subsection*{Process Workflow}
+\addcontentsline{toc}{subsection}{Process Workflow}
+To begin, we consider the basic workflow. As stated, due to regulations, pharmacists are able to perform tasks that technicians are unable to. The task breakdown is as follows:
+\begin{center}
+\begin{tabular}{|c||c|}
+\hline
+Technician & Pharmacist\\\hline\hline
+Order Entry & Order Entry \\\hline
+& Entry Verification \\\hline
+Drug Preparation & Drug Preparation\\\hline
+& Preparation Verification\\\hline
+Distribution & Distribution\\\hline
+\end{tabular}
+\end{center}
+This is to say that $T_{Technician}\subset T_{Pharmacist}$.  With this distinction in mind, we consider the flowchart contained in Figure \ref{fig:flowchart}, which describes the process workflow graphically.
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.5]{Flowchart.png}
+\caption{Pharmacy workflow by task position noting which tasks are pharmacist only.}
+\label{fig:flowchart}
+\end{figure}
+Here we may clearly see that with the exception of the IV Fill step, the workflow is fairly linear, which will make the simulation fairly simple to write. The basic workflow is:
+\begin{enumerate}
+\item Order comes in and enters the Entry Task Queue
+\item Employee enters the order, order enters the Entry Verification Queue
+\item Pharmacist verifies the entry, order enters the Fill Queue
+\item Employee fills the order, order enters the Fill Verification Queue
+\item Pharmacist verifies the fill, order enters the Dispense Queue
+\item Employee dispenses the order through the window
+\end{enumerate}
+There is a fork in the process workflow after step 3, where the order's type (Oral vs. IV) must be checked so it may be put in the appropriate filling queue, however this does not affect the linearity of the process at this step. 
 %\subsection*{SIR Model}
 %\addcontentsline{toc}{subsection}{SIR Model}
 %
