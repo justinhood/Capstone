@@ -1,5 +1,5 @@
-setwd("~/Desktop/PSM/Fall 2019/Capstone/Mayo/FirstRun/data")
-#setwd("~/Desktop/Capstone/Mayo/FirstRun/data")
+setwd("~/Desktop/PSM/Fall 2019/Capstone/Mayo/VMax Priority/Optimized")
+#setwd("~/Desktop/Capstone/Mayo/VMax Priority/data")
 rm(list = ls())
 zstar <- qnorm(.975)
 duration <- 12*60
@@ -156,7 +156,7 @@ dev.off()
 X <- read.csv("pharmIdle.txt", header = FALSE)
 X <- t(X)
 X<-X[-dim(X)[1],]
-pharmIdle <- colMeans(X)
+pharmIdle <- X
 pharmIdle <- pharmIdle/duration*100
 # These will be percentages right now, can remove if desired
 mu=mean(pharmIdle)#/duration*100
@@ -259,7 +259,7 @@ delta <- zstar*s/sqrt(length(oralWait))
 (lowerOralWait<- mu-delta)
 (upperOralWait<- mu+delta)
 
-### IV Wait Times
+### IV Throughput Times
 no_col <- max(count.fields("ivWaitTimes.txt", sep = ","))
 X <- read.table("ivWaitTimes.txt" ,sep=",",fill=TRUE,header = F,col.names=c("chr", "start", "end", "length",1:no_col))
 X <- t(X)

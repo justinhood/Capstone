@@ -3,32 +3,17 @@ setwd("~/Desktop/PSM/Fall 2019/Capstone/Mayo/Priority Comparisons")
 rm(list = ls())
 
 ## Get My Data for Oral Filled
-#####Base Case
-X <- read.csv("../FirstRun/data/oralFilled.txt", header = FALSE)
-base <- X[,1]
-#####Prof Case
-X <- read.csv("../PharmVer/data/oralFilled.txt", header = FALSE)
-prof <- X[,1]
 #####Max Case
-X <- read.csv("../Largest Queue/data/oralFilled.txt", header = FALSE)
-large <- X[,1]
+X <- read.csv("../VMax Priority/Optimized/oralFilled.txt", header = FALSE)
+best <- X[,1]
 #####Smart Case
 X <- read.csv("../VMax Priority/data/oralFilled.txt", header = FALSE)
 smart <- X[,1]
 
-
-treat <- rep("Base", times=length(base))
-df <- data.frame(base, treat)
+treat <- rep("Best", times=length(best))
+df <- data.frame(best, treat)
 names(df) <- c("OralThroughput", "Treatment")
 anovaDat <- df
-treat <- rep("Lazy", times=length(prof))
-df <- data.frame(prof, treat)
-names(df) <- c("OralThroughput", "Treatment")
-anovaDat <- rbind(anovaDat,df)
-treat <- rep("Largest", times=length(large))
-df <- data.frame(large, treat)
-names(df) <- c("OralThroughput", "Treatment")
-anovaDat <- rbind(anovaDat,df)
 treat <- rep("Smart", times=length(smart))
 df <- data.frame(smart, treat)
 names(df) <- c("OralThroughput", "Treatment")
@@ -47,7 +32,7 @@ library(viridis)
 p <- ggplot(anovaDat, aes(x=Treatment, y=OralThroughput, color=Treatment)) + 
   geom_boxplot()
 p + scale_color_viridis(discrete = TRUE, option="D")
-png("anovaBox.png")
+png("bestBox.png")
 p <- ggplot(anovaDat, aes(x=Treatment, y=OralThroughput, color=Treatment)) + 
   geom_boxplot()
 p + scale_color_viridis(discrete = TRUE, option="D")
@@ -57,7 +42,7 @@ oral.aov <- aov(OralThroughput~Treatment, data=anovaDat)
 summary(oral.aov)
 TukeyHSD(oral.aov)
 plot(TukeyHSD(oral.aov))
-png("anovaCompare.png")
+png("bestCompare.png")
 plot(TukeyHSD(oral.aov))
 dev.off()
 pairwise.t.test(anovaDat$OralThroughput, anovaDat$Treatment,
