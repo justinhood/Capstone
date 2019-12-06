@@ -1,4 +1,6 @@
-setwd("~/Desktop/PSM/Fall 2019/Capstone/Mayo/Distributions")
+#setwd("~/Desktop/PSM/Fall 2019/Capstone/Mayo/Distributions")
+setwd("~/Desktop/Capstone/Mayo/Distributions")
+
 rm(list = ls())
 library(fitdistrplus)
 library(logspline)
@@ -260,3 +262,11 @@ dev.off()
 ivIncoming.exp <- fitdist(ivIncoming, "exp")
 plot(ivIncoming.exp)
 gofstat(ivIncoming.exp)
+
+########## MEANS ###################
+(entry.mean <- orderEntry.norm[1]$estimate[1])
+(entryVer.mean <- (orderEntryVer.uni[1]$estimate[1]+orderEntryVer.uni[1]$estimate[2])/2)
+(oralPrep.mean <- exp(oralDrugPrep.log[1]$estimate[1]))
+(IVPrep.mean <- ivDrugPrep.w[1]$estimate[2]*gamma(1+1/ivDrugPrep.w[1]$estimate[1]))
+(prepVer.mean <- orderPrepVerification.w[1]$estimate[2]*gamma(1+1/orderPrepVerification.w[1]$estimate[1]))
+(disp.mean <- dispensing.norm[1]$estimate[1])
