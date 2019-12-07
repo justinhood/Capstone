@@ -1,5 +1,5 @@
-#setwd("~/Desktop/PSM/Fall 2019/Capstone/Mayo/PharmVer/data")
-setwd("~/Desktop/Capstone/Mayo/PharmVer/data")
+setwd("~/Desktop/PSM/Fall 2019/Capstone/Mayo/PharmVer/data")
+#setwd("~/Desktop/Capstone/Mayo/PharmVer/data")
 rm(list = ls())
 zstar <- qnorm(.975)
 duration <- 12*60
@@ -107,14 +107,15 @@ delta <- zstar*s/sqrt(length(dispQ))
 
 ### Queue Length intervals:
 df <- data.frame(x=c("Entry", "Entry Verification", "Oral Fill", "IV Fill", "Fill Verification", "Dispense"), L=c(lowerEntryQ,lowerEntryVerQ, lowerOralFillQ, lowerIVFillQ, lowerFillVerQ, lowerDispQ), C=c(mean(entryQ), mean(entryVerQ), mean(oralFillQ), mean(ivFillQ),mean(fillVerQ), mean(dispQ)), U=c(upperEntryQ, upperEntryVerQ, upperOralFillQ, upperIVFillQ, upperFillVerQ, upperDispQ))
+df$x <- factor(df$x, levels = c("Entry", "Entry Verification", "Oral Fill", "IV Fill", "Fill Verification", "Dispense"))
 p <- ggplot(df, aes(x = x, y = C)) +
   geom_point(size = 4) +
-  geom_errorbar(aes(ymax = U, ymin = L))
+  geom_errorbar(aes(ymax = U, ymin = L))+ylim(0,15)
 p + labs(title = "Average Queue Length", x = "Queue", y="Average Length")
 png("QueueCIs.png")
 p <- ggplot(df, aes(x = x, y = C)) +
   geom_point(size = 4) +
-  geom_errorbar(aes(ymax = U, ymin = L))
+  geom_errorbar(aes(ymax = U, ymin = L))+ylim(0,15)
 p + labs(title = "Average Queue Length", x = "Queue", y="Average Length")
 dev.off()
 

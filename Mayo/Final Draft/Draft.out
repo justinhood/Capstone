@@ -1,0 +1,15 @@
+\BOOKMARK [1][-]{section*.1}{Abstract}{}% 1
+\BOOKMARK [1][-]{section*.2}{Introduction}{}% 2
+\BOOKMARK [1][-]{section*.3}{Methods}{}% 3
+\BOOKMARK [2][-]{section*.4}{Process Workflow}{section*.3}% 4
+\BOOKMARK [1][-]{section*.5}{Distribution Identification}{}% 5
+\BOOKMARK [2][-]{section*.6}{Order Entry}{section*.5}% 6
+\BOOKMARK [2][-]{section*.7}{Remaining Distributions}{section*.5}% 7
+\BOOKMARK [1][-]{section*.8}{First Layer of Optimization}{}% 8
+\BOOKMARK [2][-]{section*.9}{Base Case}{section*.8}% 9
+\BOOKMARK [2][-]{section*.11}{Lazy Pharmacists}{section*.8}% 10
+\BOOKMARK [2][-]{section*.12}{Largest Queue}{section*.8}% 11
+\BOOKMARK [2][-]{section*.13}{Smart Method}{section*.8}% 12
+\BOOKMARK [1][-]{section*.14}{Comparing First Stage Optimizations}{}% 13
+\BOOKMARK [1][-]{section*.15}{Efficiency Mesh}{}% 14
+\BOOKMARK [1][-]{section*.16}{Conclusions}{}% 15
