@@ -28,21 +28,16 @@ MSCS 791}              %   for the title page.
 \section*{Introduction}                % Print a "chapter" heading\
 \addcontentsline{toc}{section}{Introduction}
 \pagenumbering{arabic}                  % Start text with arabic 1
-The average consumer in the United States takes an ave. Consequently, pharmacies are becoming an increasingly 
-In this case study, we are tasked with both modeling and optimizing the workflow for a pharmacy based on samples of data regarding task duration and incoming order frequency. In addition to the sample data for the pharmacy, we are also given a brief overview of the basic workflow for the pharmacy. Using this information, we shall begin by constructing a discrete event simulation in C++ to test our so called ``control" case, i.e. the pharmacy described by the basic information. Once this simulation is running and tested, we shall attack the optimization on two fronts.
+Prescription medication is becoming increasingly commonplace in the United States. In 2013, the average number of prescriptions per capita was $12.2$, up from $9$ in 1998 [CITE BOTH]. With this trend in preccription usage on the rise still, pharmacies are becoming an ever greater presence in the lives of americans. As such, pharmacies need to adapt to deal with increasing numbers of orders, as well as increasing the speed and accuracy at which they fill orders, in order to remain competitive in an increasingly saturated landscape of pharmacies.  Consequently, pharmacies must adapt their methodologies and staffing reqirements in order to maximimize the numebr of orders filled and minimize the wait time and employee idle times. Obviously, testing multiple different prioritizations and staffing numbers is both expensive and time consuming, so we shall consider a discrete event simulation approach. In this case study, we are tasked with both modeling and optimizing the workflow for a pharmacy based on samples of data regarding task duration and incoming order frequency. In addition to the sample data for the pharmacy, we are also given a brief overview of the basic workflow for the pharmacy. Using this information, we shall begin by constructing a discrete event simulation in C++ to test our so called ``control" case, i.e. the pharmacy described by the basic information. Once this simulation is running and tested, we shall attack the optimization on two fronts.
 \begin{enumerate}
 \item Optimizing task priority within the workflow (Picking the best queue to pull from)
 \item Optimizing staff breakdown (Best number of pharmacists vs. technicians to employ)
 \end{enumerate}
 With these optimizations, we should be able to develop a sense of what makes the pharmacy run more efficiently, as well as an idea of what variables could be changed to further increase the accuracy of our simulation, as well as improve the pharmacy's function.
-\section*{Methods}
-\addcontentsline{toc}{section}{Methods}
-In order to construct our discrete event simulation in C++, we must first identify the basic workflow in the pharmacy. This workflow is tied to both legal regulations as well as potentially company specific guidelines. This workflow will form the backbone for our simulations main loop. The second stage of development is centered around identifying the distributions from the time sample data provided. In order to run the simulation, we need to know the distributions that each time variable comes from. Finally, we run the simulation and report statistical analysis on the results.
-%In order to effectively model and optimize the workflow in this pharmacy, we consider the given scenario, and how we might optimize it. As described, there are essentially no guidelines in place to speed up process workflow, which we will find dramatically affects the overall performance. As a pharmacy, we assume that maximizing both the number of prescriptions and the speed at which they are filled is paramount to the public image as well as its financial success. 
-\subsection*{Process Workflow}
-\addcontentsline{toc}{subsection}{Process Workflow}
-To begin, we consider the basic workflow. As stated, due to regulations, pharmacists are able to perform tasks that technicians are unable to. Ignoring the IV technician for the time being as its task is isolated from the main workflow, the task breakdown is as follows:
-\begin{table}[H]
+\section*{Background}
+\addcontentsline{toc}{section}{Background}
+In our prototypical example, there are six basic tasks in the workflow tied to the two different types of orders, oral and IV: order entry, entry verification, oral fill, iv fill, fill verification, and dispensing through the window. In addition to these tasks, there are two different classes of employee [Pharmacist and Technician], who are constrained as to which task they may perform due to both legal regulations as well as potentially company specific guidelines. These regulations dictate that of the tasks, the verification tasks can only be performed by the pharmacists, while the remaining 3 tasks can be performed by both pharmacists and technicians. A breakdown of this hienarchy follows in Table \ref{table:tasks}, with pharmacist specific tasks highlighted in red.
+\begin{table}[h]
 \centering
 \begin{tabular}{|c||c|}
 \hline
@@ -56,6 +51,22 @@ Distribution & Distribution\\\hline
 \caption{Pharmacist vs Technician tasks.}
 \label{table:tasks}
 \end{table}
+The workflow of this pharmacy follows a fairly linear task order as one might expect from the tasks named above, and is illustrated graphically in Figure \ref{fig:flowchart}.
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.5]{Flowchart.png}
+\caption{Pharmacy workflow by task position noting which tasks are pharmacist only.}
+\label{fig:flowchart}
+\end{figure}
+We see that the workflow only diverges from being liear at the fill stage of the process, and this is due to the fact that one employee is solely tasked with filling IV orders in isolation.
+\section*{Methods}
+\addcontentsline{toc}{section}{Methods}
+In order to construct our discrete event simulation in C++, we must first identify the basic workflow in the pharmacy. This  This workflow will form the backbone for our simulations main loop. The second stage of development is centered around identifying the distributions from the time sample data provided. In order to run the simulation, we need to know the distributions that each time variable comes from. Finally, we run the simulation and report statistical analysis on the results.
+%In order to effectively model and optimize the workflow in this pharmacy, we consider the given scenario, and how we might optimize it. As described, there are essentially no guidelines in place to speed up process workflow, which we will find dramatically affects the overall performance. As a pharmacy, we assume that maximizing both the number of prescriptions and the speed at which they are filled is paramount to the public image as well as its financial success.
+\subsection*{Process Workflow}
+\addcontentsline{toc}{subsection}{Process Workflow}
+To begin, we consider the basic workflow. As stated, due to regulations, pharmacists are able to perform tasks that technicians are unable to. Ignoring the IV technician for the time being as its task is isolated from the main workflow, the task breakdown is as follows:
+
 As illustrated in Table \ref{table:tasks}, we see that pharmacists are capable of doing all steps in the workflow, while the technicians may only perform three of the five. This is to say that $Task_{Technician}\subset Task_{Pharmacist}$.  With this distinction in mind, we consider the flowchart contained in Figure \ref{fig:flowchart}, which describes the process workflow graphically.
 \begin{figure}[H]
 \centering

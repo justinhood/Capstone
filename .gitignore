@@ -4,6 +4,7 @@
 *.sync*
 *.dvi
 *.pdf
+*.out
 
 ##C++ garbage
 *.o
