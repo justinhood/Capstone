@@ -28,16 +28,16 @@ MSCS 791}              %   for the title page.
 \section*{Introduction}                % Print a "chapter" heading\
 \addcontentsline{toc}{section}{Introduction}
 \pagenumbering{arabic}                  % Start text with arabic 1
-Prescription medication is becoming increasingly commonplace in the United States. In 2013, the average number of prescriptions per capita was $12.2$, up from $9$ in 1998 [CITE BOTH]. With this trend in preccription usage on the rise still, pharmacies are becoming an ever greater presence in the lives of americans. As such, pharmacies need to adapt to deal with increasing numbers of orders, as well as increasing the speed and accuracy at which they fill orders, in order to remain competitive in an increasingly saturated landscape of pharmacies.  Consequently, pharmacies must adapt their methodologies and staffing reqirements in order to maximimize the numebr of orders filled and minimize the wait time and employee idle times. Obviously, testing multiple different prioritizations and staffing numbers is both expensive and time consuming, so we shall consider a discrete event simulation approach. In this case study, we are tasked with both modeling and optimizing the workflow for a pharmacy based on samples of data regarding task duration and incoming order frequency. In addition to the sample data for the pharmacy, we are also given a brief overview of the basic workflow for the pharmacy. Using this information, we shall begin by constructing a discrete event simulation in C++ to test our so called ``control" case, i.e. the pharmacy described by the basic information. Once this simulation is running and tested, we shall attack the optimization on two fronts.
+The use of prescription medication is becoming increasingly commonplace in the United States. In 2013, the average number of prescriptions taken per capita was $12.2$, up from $9$ in 1998 \cite{georgetown}\cite{statistica}. With this trend in preccription usage on the rise still, pharmacies are becoming an ever greater presence in the lives of most americans. As such, pharmacies need to adapt to deal with increasing numbers of orders, as well as increasing the speed and accuracy at which they fill orders in order to remain competitive in an increasingly saturated landscape of pharmacies.  Consequently, pharmacies must adapt their methodologies and staffing reqirements in order to optimize employee effectiveness and efficiency. Obviously, testing multiple different optimization schemas is both expensive and time consuming, so pharmacies have begun to consider a discrete event simulation approaches to optimization. In this case study, we are tasked with both modeling and optimizing the workflow for a protoype pharmacy based on samples of data regarding task duration and incoming order frequency. In addition to the sample data for the pharmacy, we are also given a brief overview of the basic work process order. Using this information, we shall construct a discrete event simulation model in C++ to analyze our so called ``control" case, i.e. the pharmacy described by the basic information. Once this simulation is running and tested, we shall attack the optimization on two fronts.
 \begin{enumerate}
-\item Optimizing task priority within the workflow (Picking the best queue to pull from)
-\item Optimizing staff breakdown (Best number of pharmacists vs. technicians to employ)
+\item Optimizing task priority within the workflow (picking the best task to pull from)
+\item Optimizing staff breakdown (profit optimizing number of pharmacists vs. technicians to employ)
 \end{enumerate}
-With these optimizations, we should be able to develop a sense of what makes the pharmacy run more efficiently, as well as an idea of what variables could be changed to further increase the accuracy of our simulation, as well as improve the pharmacy's function.
+With these optimizations, we hope to develop a sense of what changes could increase the efficiency of the pharmacy, as well as an idea of what variables could be manipulated to further increase the accuracy of our simulation, and improve the pharmacy's function.
 \section*{Background}
 \addcontentsline{toc}{section}{Background}
-In our prototypical example, there are six basic tasks in the workflow tied to the two different types of orders, oral and IV: order entry, entry verification, oral fill, iv fill, fill verification, and dispensing through the window. In addition to these tasks, there are two different classes of employee [Pharmacist and Technician], who are constrained as to which task they may perform due to both legal regulations as well as potentially company specific guidelines. These regulations dictate that of the tasks, the verification tasks can only be performed by the pharmacists, while the remaining 3 tasks can be performed by both pharmacists and technicians. A breakdown of this hienarchy follows in Table \ref{table:tasks}, with pharmacist specific tasks highlighted in red.
-\begin{table}[h]
+In our prototypical example, there are two types of prescription orders that the pharmacy recieves, oral and IV. Within the pharmacy itself, there are two different classes of employee, pharmacists and technicians, who are constrained as to which task they may perform due to legal regulations. As the pharmacy recieves orders, they are entered into the system by a technician. Once the order is in the system, it is verified by a pharmacust, and passed to the appropriate area to be prepared by technicians. Upon being filled, the order is again verified by a pharmacist, and then dispensed to the consumer by a technician. As such, we see that there are six basic tasks in the workflow tied to the two different types of orders: order entry, entry verification, oral or IV preparation, filled order verification, and distribution through the window. As noted before, regulations exist to limit what tasks non-pharmacist level employees may perform. These regulations dictate that of the tasks, the verification tasks may only be performed by the pharmacists, while the remaining tasks can be performed by both pharmacists and technicians. A breakdown of this hienarchy follows in Table \ref{table:tasks}, with pharmacist specific tasks highlighted in red. It should also be noted that in our control case, there exists an additional sub-type of technician, whose sole purpose is to prepare IV orders in an isolated room. This will be explored in greater detail below.
+\begin{table}[H]
 \centering
 \begin{tabular}{|c||c|}
 \hline
@@ -51,42 +51,17 @@ Distribution & Distribution\\\hline
 \caption{Pharmacist vs Technician tasks.}
 \label{table:tasks}
 \end{table}
-The workflow of this pharmacy follows a fairly linear task order as one might expect from the tasks named above, and is illustrated graphically in Figure \ref{fig:flowchart}.
-\begin{figure}[h]
-\centering
-\includegraphics[scale=.5]{Flowchart.png}
-\caption{Pharmacy workflow by task position noting which tasks are pharmacist only.}
-\label{fig:flowchart}
-\end{figure}
-We see that the workflow only diverges from being liear at the fill stage of the process, and this is due to the fact that one employee is solely tasked with filling IV orders in isolation.
-\section*{Methods}
-\addcontentsline{toc}{section}{Methods}
-In order to construct our discrete event simulation in C++, we must first identify the basic workflow in the pharmacy. This  This workflow will form the backbone for our simulations main loop. The second stage of development is centered around identifying the distributions from the time sample data provided. In order to run the simulation, we need to know the distributions that each time variable comes from. Finally, we run the simulation and report statistical analysis on the results.
-%In order to effectively model and optimize the workflow in this pharmacy, we consider the given scenario, and how we might optimize it. As described, there are essentially no guidelines in place to speed up process workflow, which we will find dramatically affects the overall performance. As a pharmacy, we assume that maximizing both the number of prescriptions and the speed at which they are filled is paramount to the public image as well as its financial success.
-\subsection*{Process Workflow}
-\addcontentsline{toc}{subsection}{Process Workflow}
-To begin, we consider the basic workflow. As stated, due to regulations, pharmacists are able to perform tasks that technicians are unable to. Ignoring the IV technician for the time being as its task is isolated from the main workflow, the task breakdown is as follows:
-
-As illustrated in Table \ref{table:tasks}, we see that pharmacists are capable of doing all steps in the workflow, while the technicians may only perform three of the five. This is to say that $Task_{Technician}\subset Task_{Pharmacist}$.  With this distinction in mind, we consider the flowchart contained in Figure \ref{fig:flowchart}, which describes the process workflow graphically.
+With this task breakdown in hand, we consider a graphical representation of the path an order takes within the pharmacy, specifically linked to the tasks described above. Looking at Figure \ref{fig:flowchart}, we see that the process of filling an order is fairly linear, with the only fork in the workflow occuring after the entry verification step. This fork is due to the necessity of establishing an order's type (Oral vs. IV) so it may be put in the appropriate filling queue. In our control pharmacy, all IV orders are filled in an isolated room by an ``IV Technician" who only prepares IV prescriptions, and does not assist with any other tasks in the workflow. 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=.5]{Flowchart.png}
 \caption{Pharmacy workflow by task position noting which tasks are pharmacist only.}
 \label{fig:flowchart}
 \end{figure}
-Here we may clearly see that with the exception of the IV Fill step, the workflow is fairly linear, which will make the simulation fairly simple in theory, allowing for more advanced optimizations. The basic workflow is:
-\begin{enumerate}
-\item Order comes in and enters the Entry Task Queue
-\item Employee enters the order, order enters the Entry Verification Queue
-\item Pharmacist verifies the entry, order enters the Fill Queue
-\item Employee fills the order, order enters the Fill Verification Queue
-\item Pharmacist verifies the fill, order enters the Dispense Queue
-\item Employee dispenses the order through the window
-\end{enumerate}
-There is a fork in the process workflow after step 3, where the order's type (Oral vs. IV) must be checked so it may be put in the appropriate filling queue, however this does not affect the linearity of the process at this step. With this workflow defined, we consider the next step of building our simulation, identifying the distributions from which we sample times from.
+With this workflow defined, we consider the next step of building our simulation, identifying the durations of the different tasks.
 \section*{Distribution Identification}
 \addcontentsline{toc}{section}{Distribution Identification}
-As we have identified in the workflow above, there are essentially six pivotal points that will have times associated with them: Entry, Entry Verification, Oral Drug Preparation, IV Drug Preparation, Order Prep Verification, and Distribution. In addition to these six points, we are also aware of the fact that the times between incoming oral and IV orders come from different distributions. As part of the given data, we have a sample of the times from each of these eight different categories, ranging in size from 34 to 60 observations. Using each of these samples, we shall construct Cullen and Frey graphs to attempt to isolate the correct distributions. With this set of hypothetical distributions in hand, we shall fit the data and test the goodness of fit statistic to identify the best fit.
+As noted above, there are essentially six pivotal tasks that we must establish the duration of in order to effectively perform an analysis. In addition to these tasks, we are also aware of the fact that the times between incoming oral and IV orders come from different distributions. As part of the given data, we have samples of the completion times of each of these eight different categories, ranging in size from 34 to 60 observations. Using each of these samples, we shall construct Cullen and Frey graphs to attempt to isolate the correct distributions. These graphs will take the skewness and kurtosis of our task time samples and help to narrow the number of potential distibutions. With this set of hypothetical distributions in hand, we shall fit the data and test the goodness of fit statistic to identify the best fit.
 \subsection*{Order Entry}
 \addcontentsline{toc}{subsection}{Order Entry}
 To begin, we consider the data provided for the order entry times. Using $R$, we construct both a histogram and a Cullen and Frey graph (Figure \ref{fig:orderEntryHistCullen}),
@@ -97,14 +72,14 @@ To begin, we consider the data provided for the order entry times. Using $R$, we
 \caption{Histogram of order entry times (left) and its corresponding Cullen and Frey graph (right)}
 \label{fig:orderEntryHistCullen}
 \end{figure}
-Looking at these plots, it appears that the data comes from a normal population, and the Cullen and Frey plot supports this. For completeness, we shall test this sample as being from a normal distribution as well as a gamma and log-normal distribution. Once the data has been fit with each of these distributions, $R$ is used to compute a goodness of fit statistic for each model, and these results follow:
+Looking at Figure \ref{fig:orderEntryHistCullen}, it appears that the data comes from a normal population, and the Cullen and Frey plot supports this. For completeness, we shall test this sample as being from a normal distribution as well as a gamma and log-normal distribution. Once the data has been fit with each of these distributions, $R$ is used to compute a goodness of fit statistic for each model, and these results follow:
 \begin{table}[H]
 \centerfloat
 \begin{tabular}{|r||c|c|c|}
 \hline
 & Normal Fit & Gamma Fit & log-normal Fit \\\hline
-Kolomogorov-Smirnov & \cellcolor{green!25}0.05172573 & 0.07123761 & 0.08600921\\\hline
-Anderson Darling & \cellcolor{green!25}0.14921512 & 0.28840960 & 0.45314418\\\hline
+%Kolomogorov-Smirnov & \cellcolor{green!25}0.05172573 & 0.07123761 & 0.08600921\\\hline
+%Anderson Darling & \cellcolor{green!25}0.14921512 & 0.28840960 & 0.45314418\\\hline
 AIC & \cellcolor{green!25}219.8769 & 221.3501 & 223.2712\\\hline
 \end{tabular}
 \caption{Goodness-of-Fit statistics for hypothetical fits on the order entry data.}
@@ -115,7 +90,7 @@ As highlighted in Table \ref{table:entryGOF}, by treating this sample as part of
 \subsection*{Remaining Distributions}
 \addcontentsline{toc}{subsection}{Remaining Distributions}
 In a similar fashion, the remaining distributions are identified as follows:
-\begin{align*}
+\begin{align*} 
 \text{Entry Verification Times} &\sim U(1.2726,\ 3.4059)\\
 \text{Oral Preparation Times} &\sim \text{Lognormal}(\mu=2.99140489,\ \sigma=.06300657)\\
 \text{IV Preparation Times} &\sim \text{Weibull}(shape=2.362195,\ scale=6.359247)\\
@@ -125,6 +100,17 @@ In a similar fashion, the remaining distributions are identified as follows:
 \text{IV Incoming Times} &\sim \text{Exponential}(\lambda = 0.05988024 )
 \end{align*}
 With these distributions in hand, we can begin the construction of the base case of the simulation.
+
+from which we sample times from.
+The workflow of this pharmacy follows a fairly linear task order as one might expect from the tasks named above, and is illustrated graphically in Figure 
+It is important to note that for our base case, we will not consider the failure rate of tasks,
+Using this flowchart, we see that there is
+\section*{Methods}
+\addcontentsline{toc}{section}{Methods}
+In order to construct our discrete event simulation in C++, we must first identify the basic workflow in the pharmacy. This  This workflow will form the backbone for our simulations main loop. The second stage of development is centered around identifying the distributions from the time sample data provided. In order to run the simulation, we need to know the distributions that each time variable comes from. Finally, we run the simulation and report statistical analysis on the results.
+%In order to effectively model and optimize the workflow in this pharmacy, we consider the given scenario, and how we might optimize it. As described, there are essentially no guidelines in place to speed up process workflow, which we will find dramatically affects the overall performance. As a pharmacy, we assume that maximizing both the number of prescriptions and the speed at which they are filled is paramount to the public image as well as its financial success.
+
+
 \section*{First Layer of Optimization}
 \addcontentsline{toc}{section}{First Layer of Optimization}
 To begin our two pronged optimization efforts, we begin by trying to improve the task logic. To begin we model the base case.
@@ -371,6 +357,8 @@ Note about skill efficiencies and dispositions, as well as leftovers from before
 %
 %\end{description}
 \begin{thebibliography}{9}
+\bibitem{georgetown} ``Prescription Drugs.” \textit{Health Policy Institute}, \url{hpi.georgetown.edu/rxdrugs/}.
+\bibitem{statistica} Statista Research Department. ``U.S. Average Number of Prescriptions per Capita.” \textit{Statista}, 9 Aug. 2019, \url{www.statista.com/statistics/315476/prescriptions-in-us-per-capita-by-age-group/}.
 %\bibitem{light} J. Light, A. Chernin, and J. M. Heffernan, ``NHL expansion and fan allegiance: a mathematical modelling study,” \textit{Mathematics-in-Industry Case Studies}, vol. 7, no. 1, Apr. 2016.
 %\bibitem{money} M. Ozanian and K. Badenhausen, ``The NHLs Most Valuable Teams” \textit{Forbes}, 21-Feb-2019. [Online]. Available: \url{https://www.forbes.com/sites/mikeozanian/2018/12/05/the-nhls-most-valuable-teams/}. [Accessed: 25-Sep-2019].
 %\bibitem{stats}  HockeyDB.com (2019) National Hockey League history and statistics. \url{http://www.hockeydb.com/ihdb/stats/leagues/141.html}. Web
