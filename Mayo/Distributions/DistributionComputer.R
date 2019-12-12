@@ -1,5 +1,5 @@
-#setwd("~/Desktop/PSM/Fall 2019/Capstone/Mayo/Distributions")
-setwd("~/Desktop/Capstone/Mayo/Distributions")
+setwd("~/Desktop/PSM/Fall 2019/Capstone/Mayo/Distributions")
+#setwd("~/Desktop/Capstone/Mayo/Distributions")
 
 rm(list = ls())
 library(fitdistrplus)
@@ -270,3 +270,6 @@ gofstat(ivIncoming.exp)
 (IVPrep.mean <- ivDrugPrep.w[1]$estimate[2]*gamma(1+1/ivDrugPrep.w[1]$estimate[1]))
 (prepVer.mean <- orderPrepVerification.w[1]$estimate[2]*gamma(1+1/orderPrepVerification.w[1]$estimate[1]))
 (disp.mean <- dispensing.norm[1]$estimate[1])
+(totalOral.mean<- entry.mean+entryVer.mean+oralPrep.mean+prepVer.mean+disp.mean)
+(totalIV.mean<- entry.mean+entryVer.mean+IVPrep.mean+prepVer.mean+disp.mean)
+

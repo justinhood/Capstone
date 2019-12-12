@@ -142,12 +142,12 @@ delta <- zstar*s/sqrt(length(ivOut))
 df <- data.frame(x=c("Oral", "IV"), L=c(lowerOralOut,lowerIVOut), C=c(mean(oralOut), mean(ivOut)), U=c(upperOralOut, upperIVOut))
 p <- ggplot(df, aes(x = x, y = C)) +
   geom_point(size = 4) +
-  geom_errorbar(aes(ymax = U, ymin = L))
+  geom_errorbar(aes(ymax = U, ymin = L))+ylim(25,75)
 p + labs(title = "Orders Filled", x = "Order Type", y="Average Filled")
 png("FilledCIs.png")
 p <- ggplot(df, aes(x = x, y = C)) +
   geom_point(size = 4) +
-  geom_errorbar(aes(ymax = U, ymin = L))
+  geom_errorbar(aes(ymax = U, ymin = L))+ylim(25,75)
 p + labs(title = "Orders Filled", x = "Order Type", y="Average Filled")
 dev.off()
 
