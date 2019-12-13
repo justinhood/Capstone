@@ -12,7 +12,7 @@
   \parfillskip \z@skip}
 \makeatother
 %*******************************************************************%
-\title{\bf Mayo Pharmacy Optimization Case Study\\
+\title{\huge\bf Mayo Pharmacy Optimization Case Study\\
 \large Using Discrete Event Simulation}  % Supply information
 \author{Justin Hood\\
 MSCS 791}              %   for the title page.
@@ -25,19 +25,21 @@ MSCS 791}              %   for the title page.
 \newpage
 \section*{Abstract}
 \addcontentsline{toc}{section}{Abstract}
+The use of prescription medication is becoming more and more commonplace in the United States \cite{georgetown}. To combat this, many pharmacies have begun to implement computer simulations to help optimize work flow to reduce cost and waste. In this case study, we modeled both the current methodology as well as several different new ``task logics" to get statistical evidence for which was best. In addition to this work flow optimization, a staff type optimization was also implemented to maximize profit. The results of our analysis point to a size and task prioritized logic, with smaller numbers of pharmacists replaced with more technicians as the most cost effective and efficient configurations.
+\newpage
 \section*{Introduction}                % Print a "chapter" heading\
 \addcontentsline{toc}{section}{Introduction}
 \pagenumbering{arabic}                  % Start text with arabic 1
 The use of prescription medication is becoming increasingly commonplace in the United States. In 2013, the average number of prescriptions taken per person was $12.2$, up from $9$ in 1998, a $136\%$ increase over 15 years \cite{georgetown}\cite{statistica}. With this trend in prescription usage continuing to rise, pharmacies are becoming an ever greater presence in the lives of most Americans. As such, pharmacies need to adapt to deal with the increasing numbers of orders, as well as improving the speed and accuracy at which they fill prescriptions in order to remain competitive in an increasingly saturated landscape of pharmacies.  Consequently, pharmacies must adapt their methodologies and staffing requirements in order to optimize efficiency and cost. Testing different optimization schemas is both expensive and time consuming, so pharmacies have begun to consider computer simulation approaches to optimization in search of more cost effective solutions.\\\hfill\\
-In this case study, we are tasked with both modeling and optimizing the workflow for a prototype pharmacy based on samples of data regarding task duration and incoming order frequency. In addition to the sample data for the pharmacy, we are also given a brief overview of the basic order fulfillment process. Using this information, we shall construct a discrete event simulation model to analyze our so called ``control" case, i.e. the pharmacy described by the basic information. Once this simulation is running and tested, we shall attempt to improve the efficiency over the base case. In order to achieve this goal, we shall attack the optimization on two fronts:
+In this case study, we are tasked with both modeling and optimizing the work flow for a prototype pharmacy based on samples of data regarding task duration and incoming order frequency. In addition to the sample data for the pharmacy, we are also given a brief overview of the basic order fulfillment process. Using this information, we shall construct a discrete event simulation model to analyze our so called ``control" case, i.e. the pharmacy described by the basic information. Once this simulation is running and tested, we shall attempt to improve the efficiency over the base case. In order to achieve this goal, we shall attack the optimization on two fronts:
 \begin{enumerate}
-\item Optimizing task priority within the workflow (picking the best task to pull from)
+\item Optimizing task priority within the work flow (picking the best task to pull from)
 \item Optimizing staff breakdown (profit optimizing number of pharmacists vs. technicians to employ)
 \end{enumerate}
 With these optimizations, we will develop a sense of what changes could increase the efficiency of the pharmacy. We will also address which variables could be manipulated to further increase the accuracy of our simulation and therefore improve the pharmacy's function.
 \section*{Background}
 \addcontentsline{toc}{section}{Background}
-In our prototypical example, there are two types of prescription orders that the pharmacy receives, oral and IV, which are handled by two different classes of employee, pharmacists and technicians, who are constrained as to which task they may perform due to legal regulations. In our prototype pharmacy, the proposed process is as follows: As the pharmacy receives orders, they are entered into the system by a technician. Once the order is in the system, it is verified by a pharmacist, and passed to the appropriate area to be prepared by technicians. Upon being filled, the order is again verified by a pharmacist, and then dispensed to the consumer by a technician. As such, we see that there are six basic tasks in the workflow tied to the two different types of orders: order entry, entry verification, oral or IV preparation, prepared order verification, and distribution through the window. As noted before, regulations exist to limit which tasks non-pharmacist level employees may perform. These regulations dictate that the verification tasks may only be performed by the pharmacists, while the remaining tasks can be performed by both pharmacists and technicians. A breakdown of this hierarchy follows in Table \ref{table:tasks}, with pharmacist specific tasks highlighted in red. It should also be noted that in our control case, there exists an additional sub-type of technician, whose sole purpose is to prepare IV orders in an isolated room. This will be explored in greater detail below.
+In our prototypical example, there are two types of prescription orders that the pharmacy receives, oral and IV, which are handled by two different classes of employee, pharmacists and technicians, who are constrained as to which task they may perform due to legal regulations. In our prototype pharmacy, the proposed process is as follows: As the pharmacy receives orders, they are entered into the system by a technician. Once the order is in the system, it is verified by a pharmacist, and passed to the appropriate area to be prepared by technicians. Upon being filled, the order is again verified by a pharmacist, and then dispensed to the consumer by a technician. As such, we see that there are six basic tasks in the work flow tied to the two different types of orders: order entry, entry verification, oral or IV preparation, prepared order verification, and distribution through the window. As noted before, regulations exist to limit which tasks non-pharmacist level employees may perform. These regulations dictate that the verification tasks may only be performed by the pharmacists, while the remaining tasks can be performed by both pharmacists and technicians. A breakdown of this hierarchy follows in Table \ref{table:tasks}, with pharmacist specific tasks highlighted in red. It should also be noted that in our control case, there exists an additional sub-type of technician, whose sole purpose is to prepare IV orders in an isolated room. This will be explored in greater detail below.
 \begin{table}[H]
 \centering
 \begin{tabular}{|c||c||c|}
@@ -368,15 +370,17 @@ In addition to the potential issues with the time distribution estimates, there 
 \item Employee breaks and shift changes.
 \item Leftover prescriptions in various queues from previous day.
 \item Order cancellation/changes.
-\item Impedance by customers (complaints or questions that occupy an employee for an extended period of time)
+\item Impedance by customers (complaints or questions that occupy an employee for an extended period of time).
+\item Prioritization of in-person orders over mail orders.
 \end{itemize}
-By construction, our model could easily be adapted to include the effects of these factors using similar techniques to parameter estimation as before. This data could be collected and continually updated over time, so that the model is kept current and effective as needs change in the future.
-
+By construction, our model could be adapted to include the effects of these factors using similar techniques to parameter estimation as before. This data could be collected and continually updated over time, so that the model is kept current and effective as needs change in the future.
 \begin{thebibliography}{9}
 \bibitem{georgetown} ``Prescription Drugs.” \textit{Health Policy Institute}, \url{hpi.georgetown.edu/rxdrugs/}.
 \bibitem{statistica} Statista Research Department. ``U.S. Average Number of Prescriptions per Capita.” \textit{Statista}, 9 Aug. 2019, \url{www.statista.com/statistics/315476/prescriptions-in-us-per-capita-by-age-group/}.
 \bibitem{PSalary} ``Salary: Pharmacist.” \textit{Glassdoor}, \url{www.glassdoor.com/Salaries/pharmacist-salary-SRCH_KO0,10.htm}.
 \bibitem{TSalary} ``Salary: Pharmacy Technician.” \textit{Glassdoor}, \url{www.glassdoor.com/Salaries/pharmacy-technician-salary-SRCH_KO0,19.htm}.
 \bibitem{Revenue} Fein, Adam J. ``New Data: Pharmacy Owners' Profits Fall As Industry Competition Rises.” \textit{Drug Channels}, 9 Jan. 2018, \url{www.drugchannels.net/2018/01/new-data-pharmacy-owners-profits-fall.html}.
+\bibitem{DiscretePharm} Reynolds, Matthew, et al. ``Using Discrete Event Simulation to Design a More Efficient Hospital Pharmacy for Outpatients.” \textit{Health Care Management Science}, vol. 14, no. 3, 2011, pp. 223–236., doi:10.1007/s10729-011-9151-1.
+\bibitem{Discrete} Reynolds, Matthew, et al. ``Using Discrete Event Simulation to Design a More Efficient Hospital Pharmacy for Outpatients.” \textit{Health Care Management Science}, vol. 14, no. 3, 2011, pp. 223–236., doi:10.1007/s10729-011-9151-1.
 \end{thebibliography}
 \end{document}                          % The required last line

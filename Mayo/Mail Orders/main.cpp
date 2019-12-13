@@ -40,12 +40,12 @@ queue<double> dispenseTimes;
 ////Process Queues
 //queue<Script> entryQ;
 SuperQ entryQ;
-queue<Script> entryVerQ;
-queue<Script> oralFillQ;
-queue<Script> ivFillQ;
-queue<Script> fillVerQ;
-queue<Script> dispQ;
-queue<Script> endQ;
+SuperQ entryVerQ;
+SuperQ oralFillQ;
+SuperQ ivFillQ;
+SuperQ fillVerQ;
+SuperQ dispQ;
+SuperQ endQ;
 //////Queue Length Holder
 /*vector<int> entryQLengths;
 vector<int> entryVerQLengths;
@@ -63,6 +63,7 @@ queue<double> getOralPrepTimes(int num);
 queue<double> getIVPrepTimes(int num);
 queue<double> getPrepVerTimes(int num);
 queue<double> getDispenseTimes(int num);
+double getRandPercent();
 
 int main(){
 	orderNum=1;
@@ -185,6 +186,12 @@ int main(){
 			if(oralIncoming.size() > 0 && ivIncoming.size() > 0){
 				//First Case, oral enters, but iv does not.
 				if(oralIncoming.front()-toc <=0 && ivIncoming.front()-toc >0){
+					//Set the Mail Status
+					if(getRandPercent()<=0.25){
+						nextOral.setMail(false);
+					}else{
+						nextOral.setMail(true);
+					}
 					//Start the total timer.
 					nextOral.setTotalTime(step);
 					//Entry Time
@@ -208,12 +215,22 @@ int main(){
 					//Set order number and push to queue
 					nextOral.setOrderNum(orderNum);
 					orderNum+=1;
-					entryQ.push(nextOral);
-					
+					if(nextOral.getMail()){
+						entryQ.addMailOrder(nextOral);
+					}else{
+						entryQ.addInPerson(nextOral);
+					}
 					//Step IV, pop the front off of the Oral
 					ivIncoming.front()-=toc;
 					oralIncoming.pop();
 				}else if(oralIncoming.front()-toc >0 && ivIncoming.front()-toc <= 0){
+					//Set the Mail Status
+					if(getRandPercent()<=0.25){
+						nextIV.setMail(false);
+					}else{
+						nextIV.setMail(true);
+					}	
+
 					//Start the total timer.
 					nextIV.setTotalTime(step);
 					//Entry Time
@@ -237,7 +254,11 @@ int main(){
 					//Set order number and push to queue
 					nextIV.setOrderNum(orderNum);
 					orderNum+=1;
-					entryQ.push(nextIV);
+					if(nextIV.getMail()){
+						entryQ.addMailOrder(nextIV);
+					}else{
+						entryQ.addInPerson(nextIV);
+					}
 					//Step IV, pop the front off of the Oral
 					oralIncoming.front()-=toc;
 					ivIncoming.pop();
@@ -245,6 +266,13 @@ int main(){
 					//Case where oral is first, prioritize oral on tie(if possible)
 					if(oralIncoming.front()-toc >= ivIncoming.front()){
 						//OralTYME
+						//Set the Mail Status
+						if(getRandPercent()<=0.25){
+							nextOral.setMail(false);
+						}else{
+							nextOral.setMail(true);
+						}
+						
 						//Start the total timer.
 						nextOral.setTotalTime(step);
 						//Entry Time
@@ -267,11 +295,22 @@ int main(){
 						nextOral.setInQueue(true);
 						nextOral.setOrderNum(orderNum);
 						orderNum+=1;
-						entryQ.push(nextOral);
+						if(nextOral.getMail()){
+							entryQ.addMailOrder(nextOral);
+						}else{
+							entryQ.addInPerson(nextOral);
+						}
 						//Pop the front off of oral Time
 						oralIncoming.pop();
 
 						//IVTYME
+						//Set the Mail Status
+						if(getRandPercent()<=0.25){
+							nextIV.setMail(false);
+						}else{
+							nextIV.setMail(true);
+						}
+								
 						//Start the total timer.
 						nextIV.setTotalTime(step);
 						//Entry Time
@@ -294,12 +333,23 @@ int main(){
 						nextIV.setInQueue(true);
 						nextIV.setOrderNum(orderNum);
 						orderNum+=1;
-						entryQ.push(nextIV);
+						if(nextIV.getMail()){
+							entryQ.addMailOrder(nextIV);
+						}else{
+							entryQ.addInPerson(nextIV);
+						}
 						//pop the front off of Iv time
 						ivIncoming.pop();
 
 					}else{
 						//IVTYME
+						//Set the Mail Status
+						if(getRandPercent()<=0.25){
+							nextIV.setMail(false);
+						}else{
+							nextIV.setMail(true);
+						}
+							
 						//Start the total timer.
 						nextIV.setTotalTime(step);
 						//Entry Time
@@ -322,11 +372,23 @@ int main(){
 						nextIV.setInQueue(true);
 						nextIV.setOrderNum(orderNum);
 						orderNum+=1;
-						entryQ.push(nextIV);
+						if(nextIV.getMail()){
+							entryQ.addMailOrder(nextIV);
+						}else{
+							entryQ.addInPerson(nextIV);
+						}
 						//pop the front off of Iv time
 						ivIncoming.pop();
 
 						//OralTYME
+						//Set the Mail Status
+						if(getRandPercent()<=0.25){
+							nextOral.setMail(false);
+						}else{
+							nextOral.setMail(true);
+						}
+							
+						
 						//Start the total timer.
 						nextOral.setTotalTime(step);
 						//Entry Time
@@ -349,7 +411,11 @@ int main(){
 						nextOral.setInQueue(true);
 						nextOral.setOrderNum(orderNum);
 						orderNum+=1;
-						entryQ.push(nextOral);
+						if(nextOral.getMail()){
+							entryQ.addMailOrder(nextOral);
+						}else{
+							entryQ.addInPerson(nextOral);
+						}
 						//Pop the front off of oral Time
 						oralIncoming.pop();
 					}
@@ -359,6 +425,13 @@ int main(){
 				}
 			} else if(oralIncoming.size() > 0 && ivIncoming.size() == 0){
 				////If iv is empty, the show must go on.
+				//Set the Mail Status
+				if(getRandPercent()<=0.25){
+					nextOral.setMail(false);
+				}else{
+					nextOral.setMail(true);
+				}
+							
 				//Start the total timer.
 				nextOral.setTotalTime(step);
 				//Entry Time
@@ -381,11 +454,22 @@ int main(){
 				nextOral.setInQueue(true);
 				nextOral.setOrderNum(orderNum);
 				orderNum+=1;
-				entryQ.push(nextOral);
+				if(nextOral.getMail()){
+					entryQ.addMailOrder(nextOral);
+				}else{
+					entryQ.addInPerson(nextOral);
+				}
 				//Pop the front off of oral Time
 				oralIncoming.pop();
 			}else if(oralIncoming.size() == 0 && ivIncoming.size() > 0){
 				////Fringe case
+				if(getRandPercent()<=0.25){
+					nextIV.setMail(false);
+				}else{
+					nextIV.setMail(true);
+				}
+
+				
 				//IVTYME
 				//Start the total timer.
 				nextIV.setTotalTime(step);
@@ -409,7 +493,11 @@ int main(){
 				nextIV.setInQueue(true);
 				nextIV.setOrderNum(orderNum);
 				orderNum+=1;
-				entryQ.push(nextIV);
+				if(nextIV.getMail()){
+					entryQ.addMailOrder(nextIV);
+				}else{
+					entryQ.addInPerson(nextIV);
+				}
 				//pop the front off of Iv time
 				ivIncoming.pop();
 			}
@@ -427,7 +515,11 @@ int main(){
 						//Make Idle
 						activeWorkers[i].setIdle(true);
 						//Push Script to ENTRYVER QUEUE
-						entryVerQ.push(transition);
+						if(transition.getMail()){
+							entryVerQ.addMailOrder(transition);
+						}else{
+							entryVerQ.addInPerson(transition);
+						}
 					}else if(activeWorkers[i].getTask()==2){
 						//Pull the script
 						transition = activeWorkers[i].getCurrentScript();
@@ -435,9 +527,17 @@ int main(){
 						activeWorkers[i].setIdle(true);
 						//Push to appropriate fill queue
 						if(transition.getIV()){
-							ivFillQ.push(transition);
+							if(transition.getMail()){
+								ivFillQ.addMailOrder(transition);
+							}else{
+								ivFillQ.addInPerson(transition);
+							}
 						}else{
-							oralFillQ.push(transition);
+							if(transition.getMail()){
+								oralFillQ.addMailOrder(transition);
+							}else{
+								oralFillQ.addInPerson(transition);
+							}
 						}
 					}else if(activeWorkers[i].getTask()==3 || activeWorkers[i].getTask()==6){
 						//Pull the Script
@@ -445,7 +545,11 @@ int main(){
 						//Make Idle
 						activeWorkers[i].setIdle(true);
 						//Push to the Verification Queue
-						fillVerQ.push(transition);
+						if(transition.getMail()){
+							fillVerQ.addMailOrder(transition);
+						}else{
+							fillVerQ.addInPerson(transition);
+						}
 
 					}else if(activeWorkers[i].getTask()==4){
 						//Pull the Script
@@ -453,7 +557,11 @@ int main(){
 						//Make Idle
 						activeWorkers[i].setIdle(true);
 						//Push to disp Queue
-						dispQ.push(transition);
+						if(transition.getMail()){
+							dispQ.addMailOrder(transition);
+						}else{
+							dispQ.addInPerson(transition);
+						}
 					}else if(activeWorkers[i].getTask()==5){
 						//Pull the Script
 						transition = activeWorkers[i].getCurrentScript();
@@ -461,7 +569,11 @@ int main(){
 						//Make Idle
 						activeWorkers[i].setIdle(true);
 						//Push to end Q
-						endQ.push(transition);
+						if(transition.getMail()){
+							endQ.addMailOrder(transition);
+						}else{
+							endQ.addInPerson(transition);
+						}
 					}
 				}else{
 					activeWorkers[i].updateWorkTime(toc);
@@ -485,7 +597,15 @@ int main(){
 					//If they are a technician, we check to see if they are the IV technician
 					if(idleWorkers[i].getIV()){
 						//Check the iv fill queue. Start if necessary
-						if(ivFillQ.size()>0){
+						vector<string> myVec;
+						if(!ivFillQ.isMailEmpty()){
+							myVec.push_back("Mail");
+						}
+						if(!ivFillQ.isPersonEmpty()){
+							myVec.push_back("Person");
+						}
+						int myRand = rand()%myVec.size();
+						if(myVec[myRand]=="Mail"){
 							idleWorkers[i].setIdle(false);
 							idleWorkers[i].setCurrentScript(ivFillQ.front());
 							idleWorkers[i].setWorkTime(ivFillQ.front().getFillTime());
@@ -930,4 +1050,7 @@ queue<double> getDispenseTimes(int num){
         }
         //cout << "Dun boiii" << endl;
         return times;
+}
+double getRandPercent(){
+	return double(rand())/double(RAND_MAX);
 }
